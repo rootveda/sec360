@@ -190,9 +190,17 @@ class LogViewer:
         ttk.Label(calc_frame, text="📊 Risk Score Calculation:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
         
         # Risk calculation display
-        self.calc_text = tk.Text(calc_frame, height=6, wrap=tk.WORD, font=('TkDefaultFont', 8),
+        self.calc_text = tk.Text(calc_frame, height=10, wrap=tk.WORD, font=('TkDefaultFont', 10, 'bold'),
                                 bg="#f8f9fa", fg="#000000", relief=tk.SUNKEN, bd=1)
         self.calc_text.pack(fill=tk.X, pady=(2, 0))
+        
+        # Configure text tags for color coding
+        self.calc_text.tag_configure("header", foreground="#2c3e50", font=('TkDefaultFont', 10, 'bold'))
+        self.calc_text.tag_configure("category", foreground="#8e44ad", font=('TkDefaultFont', 9, 'bold'))
+        self.calc_text.tag_configure("calculation", foreground="#27ae60", font=('TkDefaultFont', 9))
+        self.calc_text.tag_configure("score", foreground="#e74c3c", font=('TkDefaultFont', 9, 'bold'))
+        self.calc_text.tag_configure("items", foreground="#3498db", font=('TkDefaultFont', 8))
+        self.calc_text.tag_configure("summary", foreground="#f39c12", font=('TkDefaultFont', 9, 'bold'))
         
         # Initial message
         self.calc_text.insert(tk.END, "Select a session to see detailed risk score calculation...")
@@ -208,9 +216,18 @@ class LogViewer:
         project_root = Path(__file__).parent.parent.parent
         sessions_dir = project_root / "core" / "logs" / "sessions"
         if sessions_dir.exists():
-            # Look for practice session files
+            # Look for practice session files that have corresponding details files
             for file_path in sessions_dir.glob("practice_*.json"):
                 session_id = file_path.stem
+                
+                # Skip details files
+                if session_id.endswith("_details"):
+                    continue
+                
+                # Only include sessions that have detailed analysis data
+                details_file = sessions_dir / f"{session_id}_details.json"
+                if not details_file.exists():
+                    continue
                 
                 try:
                     with open(file_path, 'r') as f:
@@ -468,52 +485,11 @@ class LogViewer:
         
         session_data = self.session_data[self.current_session]
         
-        if 'code_analyses' in session_data and session_data['code_analyses']:
-            # Show individual code analyses from practice sessions
-            row_num = 1
-            for analysis in session_data['code_analyses']:
-                timestamp = analysis.get('timestamp', session_data.get('session_start_time', 'Unknown'))
-                analysis_result = analysis.get('analysis_result', {})
-                
-                # Create summary row for this analysis
-                self.log_tree.insert('', tk.END, values=(
-                    timestamp,
-                    "CODE_ANALYSIS",
-                    f"Lines: {analysis_result.get('lines_of_code', 'N/A')}, Risk: {analysis_result.get('risk_score', 'N/A')}/100",
-                    f"{analysis_result.get('confidence', 1.0):.2f}",
-                    f"Analysis #{row_num}"
-                ), tags=["analysis"])
-                
-                row_num += 1
-        else:
-            # For legacy format or if no analyses, show basic session info
-            self.log_tree.insert('', tk.END, values=(
-                session_data.get('session_start_time', 'Unknown'),
-                "SESSION_SUMMARY",
-                f"Duration: {session_data.get('session_duration', 0):.1f}s, Messages: {session_data.get('message_count', 0)}",
-                "1.00",
-                "Session Overview"
-            ), tags=["session"])
-            
-            # Show final metrics if available
-            if 'final_analysis_metrics' in session_data:
-                metrics = session_data['final_analysis_metrics']
-                self.log_tree.insert('', tk.END, values=(
-                    session_data.get('session_end_time', 'Unknown'),
-                    "FINAL_METRICS",
-                    f"Lines: {metrics.get('total_lines', 0)}, Risk: {metrics.get('average_risk_score', 0):.1f}/100",
-                    "1.00",
-                    "Final Results"
-                ), tags=["metrics"])
-        
-        # Try to load detailed flagged items and display them
+        # Try to load detailed flagged items first
         detailed_items = self._load_detailed_flagged_items(session_data.get('unique_session_id', self.current_session))
         
         if detailed_items:
-            # Clear existing items and show detailed flagged items
-            for item in self.log_tree.get_children():
-                self.log_tree.delete(item)
-            
+            # Display individual flagged items
             for item in detailed_items:
                 timestamp = item.get('timestamp', 'Unknown')
                 item_type = item.get('type', 'Unknown')
@@ -664,24 +640,22 @@ class LogViewer:
         avg_risk_score = final_metrics.get('average_risk_score', 0)
         risk_level = final_metrics.get('risk_level', 'Unknown')
         
-        calc_text = f"📊 Basic Risk Calculation:\n\n"
-        calc_text += f"• Total Lines Analyzed: {total_lines}\n"
-        calc_text += f"• Sensitive Fields Found: {total_fields}\n"
-        calc_text += f"• Sensitive Data Instances: {total_data}\n"
-        calc_text += f"• Total Items: {total_fields + total_data}\n\n"
+        self.calc_text.insert(tk.END, "📊 Basic Risk Calculation:\n\n", "header")
+        self.calc_text.insert(tk.END, f"• Total Lines Analyzed: {total_lines}\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Sensitive Fields Found: {total_fields}\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Sensitive Data Instances: {total_data}\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Total Items: {total_fields + total_data}\n\n", "calculation")
         
         if total_fields + total_data > 0:
             # Basic calculation
             base_score = (total_fields * 5) + (total_data * 8)
-            calc_text += f"• Base Score: ({total_fields} fields × 5) + ({total_data} data × 8) = {base_score} points\n"
-            calc_text += f"• Line Normalization: Applied for {total_lines} lines\n"
-            calc_text += f"• Final Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n"
-            calc_text += f"Note: Detailed breakdown available for sessions with flagged items data."
+            self.calc_text.insert(tk.END, f"• Base Score: ({total_fields} fields × 5) + ({total_data} data × 8) = {base_score} points\n", "calculation")
+            self.calc_text.insert(tk.END, f"• Line Normalization: Applied for {total_lines} lines\n", "calculation")
+            self.calc_text.insert(tk.END, f"• Final Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n", "score")
+            self.calc_text.insert(tk.END, f"Note: Detailed breakdown available for sessions with flagged items data.", "items")
         else:
-            calc_text += f"• No sensitive data detected\n"
-            calc_text += f"• Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})"
-        
-        self.calc_text.insert(tk.END, calc_text)
+            self.calc_text.insert(tk.END, f"• No sensitive data detected\n", "calculation")
+            self.calc_text.insert(tk.END, f"• Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})", "score")
         self.calc_text.config(state=tk.DISABLED)
     
     def _show_detailed_risk_calculation(self, detailed_items, session_data):
@@ -726,14 +700,14 @@ class LogViewer:
         risk_level = final_metrics.get('risk_level', 'Unknown')
         total_lines = final_metrics.get('total_lines', 0)
         
-        # Build calculation text
-        calc_text = f"📊 Detailed Risk Calculation:\n\n"
-        calc_text += f"Session Overview:\n"
-        calc_text += f"• Total Lines: {total_lines}\n"
-        calc_text += f"• Analyses: {analysis_count}\n"
-        calc_text += f"• Final Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n"
+        # Build calculation text with color coding
+        self.calc_text.insert(tk.END, "📊 Detailed Risk Calculation:\n\n", "header")
+        self.calc_text.insert(tk.END, "Session Overview:\n", "header")
+        self.calc_text.insert(tk.END, f"• Total Lines: {total_lines}\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Analyses: {analysis_count}\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Final Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n", "score")
         
-        calc_text += f"Category Breakdown:\n"
+        self.calc_text.insert(tk.END, "Category Breakdown:\n", "header")
         
         category_names = {
             'pii': 'PII Data',
@@ -760,30 +734,28 @@ class LogViewer:
                 category_score = category_base * multiplier
                 total_base_score += category_score
                 
-                calc_text += f"• {category_names.get(category, category.title())}:\n"
-                calc_text += f"  - Fields: {data['fields']} × 5 = {fields_score} points\n"
-                calc_text += f"  - Data: {data['data']} × 8 = {data_score} points\n"
-                calc_text += f"  - Subtotal: {category_base} × {multiplier} = {category_score:.1f} points\n"
+                self.calc_text.insert(tk.END, f"• {category_names.get(category, category.title())}:\n", "category")
+                self.calc_text.insert(tk.END, f"  - Fields: {data['fields']} × 5 = {fields_score} points\n", "calculation")
+                self.calc_text.insert(tk.END, f"  - Data: {data['data']} × 8 = {data_score} points\n", "calculation")
+                self.calc_text.insert(tk.END, f"  - Subtotal: {category_base} × {multiplier} = {category_score:.1f} points\n", "score")
                 
                 # Show specific items
                 if data['items']:
-                    calc_text += f"  - Items: "
+                    self.calc_text.insert(tk.END, f"  - Items: ", "calculation")
                     item_names = [item['name'][:15] + "..." if len(item['name']) > 15 else item['name'] 
                                 for item in data['items'][:3]]
-                    calc_text += f"{', '.join(item_names)}"
+                    self.calc_text.insert(tk.END, f"{', '.join(item_names)}", "items")
                     if len(data['items']) > 3:
-                        calc_text += f" (+{len(data['items'])-3} more)"
-                    calc_text += "\n"
-                calc_text += "\n"
+                        self.calc_text.insert(tk.END, f" (+{len(data['items'])-3} more)", "items")
+                    self.calc_text.insert(tk.END, "\n")
+                self.calc_text.insert(tk.END, "\n")
         
-        calc_text += f"Calculation Summary:\n"
-        calc_text += f"• Base Score: {total_base_score:.1f} points\n"
-        calc_text += f"• Line Normalization: Applied for {total_lines} lines\n"
-        calc_text += f"• Final Score: {avg_risk_score:.1f}/100\n"
-        calc_text += f"• Risk Level: {risk_level.upper()}\n\n"
-        calc_text += f"Multipliers: Medical (1.2x), HEPA (1.1x), PII (1.0x), API (0.9x)"
-        
-        self.calc_text.insert(tk.END, calc_text)
+        self.calc_text.insert(tk.END, f"Calculation Summary:\n", "summary")
+        self.calc_text.insert(tk.END, f"• Base Score: {total_base_score:.1f} points\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Line Normalization: Applied for {total_lines} lines\n", "calculation")
+        self.calc_text.insert(tk.END, f"• Final Score: {avg_risk_score:.1f}/100\n", "score")
+        self.calc_text.insert(tk.END, f"• Risk Level: {risk_level.upper()}\n\n", "score")
+        self.calc_text.insert(tk.END, f"Multipliers: Medical (1.2x), HEPA (1.1x), PII (1.0x), API (0.9x)", "calculation")
         self.calc_text.config(state=tk.DISABLED)
     
     def display_session_stats(self):
