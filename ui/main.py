@@ -842,8 +842,14 @@ Ready to start? Feel free to ask me questions or share code for analysis!"""
     def open_log_viewer(self):
         """Open the log viewer in a separate window"""
         try:
-            # Start log viewer in a separate process
-            subprocess.Popen([sys.executable, "core/logging_system/log_viewer.py"])
+            # Get the project root directory
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            
+            # Use absolute path to log viewer
+            log_viewer_path = os.path.join(project_root, "core", "logging_system", "log_viewer.py")
+            
+            # Start log viewer in a separate process with correct working directory
+            subprocess.Popen([sys.executable, log_viewer_path], cwd=project_root)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to open log viewer: {e}")
     

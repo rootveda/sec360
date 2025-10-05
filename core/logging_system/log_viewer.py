@@ -107,7 +107,9 @@ class LogViewer:
         sessions = []
         
         # Look for session files in sessions directory
-        sessions_dir = Path("core/logs/sessions")
+        # Get project root directory (go up from core/logging_system/)
+        project_root = Path(__file__).parent.parent.parent
+        sessions_dir = project_root / "core" / "logs" / "sessions"
         if sessions_dir.exists():
             # Look for practice session files
             for file_path in sessions_dir.glob("practice_*.json"):
@@ -164,7 +166,7 @@ class LogViewer:
             self.session_id_mapping = {}
             if hasattr(self, 'info_text'):
                 self.info_text.delete(1.0, tk.END)
-                self.info_text.insert(tk.END, "No sessions found in core/logs/sessions directory.")
+                self.info_text.insert(tk.END, f"No sessions found in {sessions_dir} directory.")
         
         # Clear session display
         self.clear_session_display()
@@ -402,7 +404,9 @@ class LogViewer:
 
 if __name__ == "__main__":
     # Create logs directory if it doesn't exist
-    os.makedirs("core/logs", exist_ok=True)
+    project_root = Path(__file__).parent.parent.parent
+    logs_dir = project_root / "core" / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
     
     # Start the log viewer
     viewer = LogViewer()

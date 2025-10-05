@@ -1248,9 +1248,25 @@ Ready to edit? Make changes above, then click "Load Sample" to copy to Practice 
             import subprocess
             import os
             
-            # Launch log viewer as separate process (same as manual command)
+            # Get project root directory
             project_root = os.path.dirname(os.path.abspath(__file__))
-            cmd = ['python3', '-m', 'core.logging_system.log_viewer']
+            
+            # Detect Python command (same logic as start.sh)
+            python_cmd = "python3"
+            if not self.command_exists("python3"):
+                if self.command_exists("python"):
+                    # Check if python is version 3+
+                    try:
+                        import subprocess
+                        result = subprocess.run(["python", "--version"], capture_output=True, text=True)
+                        version = result.stdout.strip().split()[1].split('.')[0]
+                        if int(version) >= 3:
+                            python_cmd = "python"
+                    except:
+                        pass
+            
+            # Launch log viewer as separate process
+            cmd = [python_cmd, '-m', 'core.logging_system.log_viewer']
             
             # Run as separate process in project directory
             subprocess.Popen(cmd, cwd=project_root, 
@@ -1260,6 +1276,11 @@ Ready to edit? Make changes above, then click "Load Sample" to copy to Practice 
             
         except Exception as e:
             messagebox.showerror("Error", f"Failed to open log viewer: {str(e)}")
+    
+    def command_exists(self, cmd):
+        """Check if command exists"""
+        import shutil
+        return shutil.which(cmd) is not None
     
     def open_scoreboard(self):
         """Open scoreboard"""
