@@ -510,28 +510,28 @@ class LogViewer:
                 else:
                     content = f"{item_type}: {item_name}"
                     flag_type = category
-        
-        context = f"Line {line}" if line > 0 else "Unknown line"
-        
-        self.log_tree.insert('', tk.END, values=(
-            timestamp,
-            flag_type,
-            content,
-            f"{risk_score:.1f}",
-            context
-        ), tags=[category.lower()])
-        
-        # Configure tag colors for new types
-        self.log_tree.tag_configure("analysis", background="#e6f3ff", foreground="#003366")    # Light blue for analyses
-        self.log_tree.tag_configure("session", background="#f0f8ff", foreground="#4169e1")    # Light blue for session info
-        self.log_tree.tag_configure("metrics", background="#fff8dc", foreground="#b8860b")   # Light yellow for metrics
-        self.log_tree.tag_configure("pii", background="#ffe6e6", foreground="#cc0000")       # Light red for PII
-        self.log_tree.tag_configure("medical", background="#e6ffe6", foreground="#006600")   # Light green for medical
-        self.log_tree.tag_configure("hepa", background="#e6f3ff", foreground="#003366")      # Light blue for HEPA
-        self.log_tree.tag_configure("compliance_api", background="#fff0e6", foreground="#cc6600")  # Light orange for API
-        
-        # Refresh the tree to ensure items are visible
-        self.log_tree.update()
+                
+                context = f"Line {line}" if line > 0 else "Unknown line"
+                
+                self.log_tree.insert('', tk.END, values=(
+                    timestamp,
+                    flag_type,
+                    content,
+                    f"{risk_score:.1f}",
+                    context
+                ), tags=[category.lower()])
+                
+                # Configure tag colors for new types
+                self.log_tree.tag_configure("analysis", background="#e6f3ff", foreground="#003366")    # Light blue for analyses
+                self.log_tree.tag_configure("session", background="#f0f8ff", foreground="#4169e1")    # Light blue for session info
+                self.log_tree.tag_configure("metrics", background="#fff8dc", foreground="#b8860b")   # Light yellow for metrics
+                self.log_tree.tag_configure("pii", background="#ffe6e6", foreground="#cc0000")       # Light red for PII
+                self.log_tree.tag_configure("medical", background="#e6ffe6", foreground="#006600")   # Light green for medical
+                self.log_tree.tag_configure("hepa", background="#e6f3ff", foreground="#003366")      # Light blue for HEPA
+                self.log_tree.tag_configure("compliance_api", background="#fff0e6", foreground="#cc6600")  # Light orange for API
+                
+                # Refresh the tree to ensure items are visible
+                self.log_tree.update()
     
     def _load_detailed_flagged_items(self, session_id: str) -> List[Dict]:
         """Load detailed flagged items from analysis details file"""
