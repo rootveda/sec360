@@ -182,6 +182,26 @@ class LogViewer:
         ttk.Label(critical_frame, text="Critical (80-100)", font=('TkDefaultFont', 8)).pack(side=tk.RIGHT)
         critical_label = tk.Label(critical_frame, text="🚨", bg="#ffcccc", fg="#990000", font=('TkDefaultFont', 8))
         critical_label.pack(side=tk.RIGHT, padx=(2, 0))
+        
+        # Sample calculation section
+        calc_frame = ttk.Frame(footer_frame)
+        calc_frame.pack(fill=tk.X, padx=5, pady=(5, 5))
+        
+        ttk.Label(calc_frame, text="📊 Sample Risk Calculation:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
+        
+        # Sample calculation content
+        sample_text = """Example: Code with 50 lines containing:
+• 2 PII fields (ssn, email) + 1 PII data instance = 3 items × 5 points × 1.0 multiplier = 15.0 points
+• 1 Medical field (patient_name) + 1 Medical data instance = 2 items × 5 points × 1.2 multiplier = 12.0 points  
+• 1 API field (api_key) + 1 API data instance = 2 items × 5 points × 0.9 multiplier = 9.0 points
+
+Base Score: 15.0 + 12.0 + 9.0 = 36.0 points
+Line Factor: 50 lines → Normalization applied
+Final Score: 36.0 × line_factor = ~72/100 (High Risk)"""
+        
+        sample_label = tk.Label(calc_frame, text=sample_text, font=('TkDefaultFont', 7), 
+                               justify=tk.LEFT, bg="#f8f9fa", relief=tk.SUNKEN, bd=1)
+        sample_label.pack(fill=tk.X, pady=(2, 0))
     
     def load_sessions(self):
         """Load all available sessions"""
