@@ -217,10 +217,6 @@ class PracticeSessionManager:
             # Calculate final metrics
             final_metrics = self._calculate_final_metrics()
             
-            # Debug: Print code analyses before saving
-            print(f"DEBUG: Code analyses count before saving: {len(self.code_analyses)}")
-            print(f"DEBUG: Risk scores array: {self.session_metrics['risk_scores']}")
-            
             # Create session data
             session_data = {
                 "user_name": self.user_name,
@@ -624,7 +620,6 @@ Keep examples focused on removing sensitive patterns from code."""
                 
                 # Calculate tokens/sec for this interaction
                 tokens_per_sec = total_tokens / processing_time_sec if processing_time_sec > 0 else 0
-                print(f"DEBUG: Chat thread tokens_per_sec calculation: {tokens_per_sec} (NOT storing - DUPLICATE)")
                 # REMOVED: self.session_metrics['current_tokens_per_sec'] = tokens_per_sec  # This overwrites!
                 
                 # Handle response in main thread
@@ -731,20 +726,15 @@ Keep examples focused on removing sensitive patterns from code."""
             # Track code analysis for duplicate detection (display only)
             self._track_code_analysis(code)
             
-            print(f"DEBUG: Starting code analysis thread for model: {model}")
             # Set model
             self.ollama_client.set_model(model)
             
             # Use main analysis system
-            print(f"DEBUG: Calling analyzer.analyze_code...")
             raw_result = self.analyzer.analyze_code(code, model)
-            print(f"DEBUG: Analyzer returned keys: {list(raw_result.keys()) if raw_result else 'None'}")
             
             if raw_result and raw_result.get('success', False):
-                print(f"DEBUG: Analysis successful, parsing JSON response...")
                 # Parse analysis result
                 json_data = self.json_parser.parse_json_response(raw_result['raw_response'])
-                print(f"DEBUG: JSON parsing successful, keys: {list(json_data.keys())}")
                 
                 # Store analysis data
                 analysis_data = {
@@ -753,9 +743,6 @@ Keep examples focused on removing sensitive patterns from code."""
                     'analysis_result': json_data
                 }
                 self.code_analyses.append(analysis_data)
-                print(f"DEBUG: Added code analysis #{len(self.code_analyses)}")
-                print(f"DEBUG: Risk score from analysis: {json_data.get('risk_score', 'NOT_FOUND')}")
-                print(f"DEBUG: Full analysis data saved: {type(analysis_data['analysis_result'])}")
                 
                 # Update session metrics
                 self._update_session_metrics(json_data)
@@ -763,7 +750,6 @@ Keep examples focused on removing sensitive patterns from code."""
                 # Use actual token counts from Ollama if available
                 if 'raw_response_data' in raw_result:
                     response_data = raw_result['raw_response_data']
-                    print(f"DEBUG: Ollama fields: {list(response_data.keys())}")
                     prompt_tokens = response_data.get('prompt_eval_count', 0)
                     eval_tokens = response_data.get('eval_count', 0)
                     prompt_draft_tokens = response_data.get('prompt_draft_count', 0)
@@ -774,7 +760,6 @@ Keep examples focused on removing sensitive patterns from code."""
                     total_output_tokens = eval_tokens + eval_draft_tokens
                     actual_tokens = total_input_tokens + total_output_tokens
                     
-                    print(f"DEBUG: Token breakdown: prompt={prompt_tokens}, eval={eval_tokens}, input_total={total_input_tokens}, output_total={total_output_tokens}, actual_total={actual_tokens}")
                     
                     # DON'T add tokens here - they're already added in _handle_code_analysis_result
                     # self.total_tokens += actual_tokens  # COMMENTED OUT - duplicate counting
@@ -783,14 +768,11 @@ Keep examples focused on removing sensitive patterns from code."""
                     processing_duration = response_data.get('total_duration', 0)
                     processing_time_sec = processing_duration / 1_000_000_000 if processing_duration > 0 else 0
                     tokens_per_sec = actual_tokens / processing_time_sec if processing_time_sec > 0 else 0
-                    print(f"DEBUG: Code analysis thread tokens пери sec calculation: {tokens_per_sec} (NOT storing - DUPLICATE)")
                     # REMOVED: self.session_metrics['current_tokens_per_sec'] = tokens_per_sec  # This overwrites!
                 else:
                     # Fallback: estimate tokens
-                    print(f"DEBUG: Using fallback token estimation - no raw_response_data found")
                     estimated_tokens = len(code.split()) + len(raw_result['raw_response'].split())
                     self.total_tokens += estimated_tokens
-                    print(f"DEBUG: Estimated tokens={estimated_tokens}, raw_result keys={list(raw_result.keys())}")
                 
                 # Update UI in main thread (pass raw_result for token info)
                 self.main_app.root.after(0, self._handle_code_analysis_result, raw_result)
@@ -799,10 +781,7 @@ Keep examples focused on removing sensitive patterns from code."""
                 self.main_app.root.after(0, self._handle_chat_response, error_msg)
             
         except Exception as e:
-            print(f"DEBUG: Exception in code analysis thread: {str(e)}")
-            print(f"DEBUG: Exception type: {type(e)}")
             import traceback
-            print(f"DEBUG: Traceback: {traceback.format_exc()}")
             # Update analyses count even on error to track attempts
             self.session_metrics['analysis_count'] += 1
             error_msg = f"Error analyzing code: {str(e)}"
@@ -845,7 +824,6 @@ Be educational and helpful, not just critical."""
                 processing_duration = response_data.get('total_duration', 0)  # nanoseconds
                 processing_time_sec = processing_duration / 1_000_000_000 if processing_duration > 0 else 0
                 tokens_per_sec = total_tokens / processing_time_sec if processing_time_sec > 0 else 0
-                print(f"DEBUG: Chat analysis tokens_per_sec calculation: {tokens_per_sec} (NOT storing - DUPLICATE)")
                 # REMOVED: self.session_metrics['current_tokens_per_sec'] = tokens_per_sec  # This overwrites!
             else:
                 # Handle case when stop_thinking is True or response_data is None
@@ -863,7 +841,6 @@ Be educational and helpful, not just critical."""
     
     def _handle_code_analysis_result(self, raw_result: Dict) -> None:
         """Handle code analysis result in main thread"""
-        print(f"DEBUG: _handle_code_analysis_result called with keys: {list(raw_result.keys())}")
         
         # Extract the analysis data for metrics
         if 'raw_response_data' in raw_result:
@@ -876,18 +853,15 @@ Be educational and helpful, not just critical."""
             # Total tokens = input + output (no draft tokens in llama3.2:3b)
             actual_tokens = prompt_tokens + eval_tokens
             
-            print(f"DEBUG: Ollama tokens - input:{prompt_tokens}, output:{eval_tokens}, total:{actual_tokens}")
             
             # Add tokens only ONCE in this handler (not in the thread)
             self.total_tokens += actual_tokens
             
-            print(f"DEBUG: Handler token counting - added {actual_tokens} tokens (input:{prompt_tokens}, output:{eval_tokens})")
             
             # Store tokens/sec for code analysis (for THIS interaction only)
             processing_duration = response_data.get('total_duration', 0)
             processing_time_sec = processing_duration / 1_000_000_000 if processing_duration > 0 else 0
             tokens_per_sec = actual_tokens / processing_time_sec if processing_time_sec > 0 else 0
-            print(f"DEBUG: Handler - tokens_per_sec={tokens_per_sec}, actual_tokens={actual_tokens}, processing_time_sec={processing_time_sec}")
             
             # Store individual token counts for footer display
             self.session_metrics['current_tokens_per_sec'] = tokens_per_sec
@@ -1199,7 +1173,6 @@ Let's start with secure coding practices!"""
                 
                 # Get current tokens/sec from Ollama processing  
                 current_tokens_per_sec = self.session_metrics.get('current_tokens_per_sec', 0)
-                print(f"DEBUG: Footer - current_tokens_per_sec={current_tokens_per_sec}")
                 
                 # Create detailed token breakdown like Ollama verbose output
                 current_input_tokens = self.session_metrics.get('current_input_tokens', 0)
@@ -1218,7 +1191,6 @@ Let's start with secure coding practices!"""
                     footer_text = f"Session Duration: {duration:.0f}s | Messages: {self.message_count} | Total Tokens: {self.total_tokens} | {token_breakdown} | Analyses: {self.session_metrics['analysis_count']} | {analysis_summary}"
                 else:
                     footer_text = f"Session Duration: {duration:.0f}s | Messages: {self.message_count} | Total Tokens: {self.total_tokens} | Analyses: {self.session_metrics['analysis_count']} | {analysis_summary}"
-                print(f"DEBUG: Footer text={footer_text}")
             
             self.main_app.practice_token_details_var.set(footer_text)
         except Exception as e:
