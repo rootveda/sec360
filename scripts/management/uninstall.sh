@@ -71,6 +71,33 @@ stop_services() {
     print_success "All services stopped"
 }
 
+# Global variable for Python command
+PYTHON_CMD=""
+
+# Function to detect Python command
+detect_python_command() {
+    PYTHON_CMD=""
+    if command_exists python3; then
+        PYTHON_CMD="python3"
+    elif command_exists python; then
+        # Check if python is version 3+
+        local python_version_check=$(python --version 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
+        if [[ "$python_version_check" -ge 3 ]]; then
+            PYTHON_CMD="python"
+        else
+            print_error "Python 3+ is required but only Python 2 found"
+            return 1
+        fi
+    else
+        print_error "Python 3+ is required but not installed"
+        return 1
+    fi
+    
+    local python_version=$($PYTHON_CMD --version 2>&1 | cut -d' ' -f2)
+    print_success "Using Python version: $python_version (command: $PYTHON_CMD)"
+    return 0
+}
+
 # Function to uninstall Python dependencies
 uninstall_python_deps() {
     print_status "Uninstalling Python dependencies..."
@@ -79,9 +106,9 @@ uninstall_python_deps() {
     local packages=("requests" "psutil")
     
     for package in "${packages[@]}"; do
-        if python3 -m pip show "$package" >/dev/null 2>&1; then
+        if $PYTHON_CMD -m pip show "$package" >/dev/null 2>&1; then
             print_status "Uninstalling $package..."
-            python3 -m pip uninstall "$package" -y --quiet
+            $PYTHON_CMD -m pip uninstall "$package" -y --quiet
             print_success "$package uninstalled"
         else
             print_status "$package not installed via pip"
@@ -242,6 +269,12 @@ main() {
     # Stop all services first
     stop_services
     echo ""
+    
+    # Detect Python command before uninstalling dependencies
+    if ! detect_python_command; then
+        print_error "Cannot detect Python command. Skipping Python dependency uninstall."
+        return 1
+    fi
     
     # Uninstall Python dependencies
     uninstall_python_deps
