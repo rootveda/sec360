@@ -627,19 +627,35 @@ install_ollama() {
     esac
 }
 
+# Global variable for Python command
+PYTHON_CMD=""
+
 # Function to check system requirements
 check_requirements() {
     print_status "Checking system requirements..."
     
-    # Check Python
-    if ! command_exists python3; then
-        print_error "Python 3 is required but not installed"
+    # Check Python (handle both python3 and python commands)
+    PYTHON_CMD=""
+    if command_exists python3; then
+        PYTHON_CMD="python3"
+    elif command_exists python; then
+        # Check if python is version 3+
+        local python_version_check=$(python --version 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
+        if [[ "$python_version_check" -ge 3 ]]; then
+            PYTHON_CMD="python"
+        else
+            print_error "Python 3+ is required but only Python 2 found"
+            print_status "Please install Python 3 from https://python.org"
+            exit 1
+        fi
+    else
+        print_error "Python 3+ is required but not installed"
         print_status "Please install Python 3 from https://python.org"
         exit 1
     fi
     
-    local python_version=$(python3 --version 2>&1 | cut -d' ' -f2)
-    print_success "Python version: $python_version"
+    local python_version=$($PYTHON_CMD --version 2>&1 | cut -d' ' -f2)
+    print_success "Python version: $python_version (using command: $PYTHON_CMD)"
     
     # Configure Homebrew PATH if needed (for macOS)
     if [[ "$(uname -s)" == "Darwin" ]]; then
@@ -728,9 +744,9 @@ install_dependencies() {
     print_status "Installing Python dependencies..."
     
     # Install required packages for system Python
-    python3 -m pip install requests --quiet --no-warn-script-location
-    python3 -m pip install "psutil>=5.9.0" --quiet --no-warn-script-location
-    python3 -m pip install tkinter --quiet --no-warn-script-location 2>/dev/null || print_status "tkinter is built into Python (no installation needed)"
+    $PYTHON_CMD -m pip install requests --quiet --no-warn-script-location
+    $PYTHON_CMD -m pip install "psutil>=5.9.0" --quiet --no-warn-script-location
+    $PYTHON_CMD -m pip install tkinter --quiet --no-warn-script-location 2>/dev/null || print_status "tkinter is built into Python (no installation needed)"
     
     print_success "Python dependencies installed"
 }
@@ -848,7 +864,7 @@ start_application() {
     print_status "Starting Sec360 Application..."
     
     # Start the application in background
-    nohup python3 sec360.py > logs/application.log 2>&1 &
+    nohup $PYTHON_CMD sec360.py > logs/application.log 2>&1 &
     local app_pid=$!
     
     # Wait a moment for the application to start

@@ -1,6 +1,6 @@
 # 🛡️ Sec360 - Advanced Code Security Analysis Platform
 
-[![Cross-Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue)](https://github.com/yourusername/sec360)
+[![Cross-Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue)](https://github.com/rootveda/sec360)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-green)](https://python.org)
 [![Ollama](https://img.shields.io/badge/LLM-Ollama%20Powered-orange)](https://ollama.ai)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
@@ -51,7 +51,7 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
-- **Python 3.8+**
+- **Python 3.8+** (including Python 13+ - auto-detected by start.sh)
 - **Git** (for cloning)
 - **Internet connection** (for initial setup)
 
@@ -59,7 +59,7 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/sec360.git
+git clone https://github.com/rootveda/sec360.git
 cd sec360
 
 # Make scripts executable (Unix/macOS)

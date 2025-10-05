@@ -1,8 +1,13 @@
 # Sec360 by Abhay - Python Dependencies
 # Complete dependency list for smooth start.sh script execution
+# Compatible with Python 3.8+ (including Python 13+)
 
 # =============================================================================
-# CORE DEPENDENCIES (Required for basic functionality)
+# PYTHON VERSION REQUIREMENTS
+# =============================================================================
+# Minimum Python Version: 3.8
+# Maximum Python Version: No limit (tested up to Python 13+)
+# Supported Commands: python3, python (auto-detected by start.sh)
 # =============================================================================
 
 # HTTP Client for Ollama API communication
