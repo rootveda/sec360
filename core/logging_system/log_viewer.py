@@ -214,12 +214,17 @@ class LogViewer:
         project_root = Path(__file__).parent.parent.parent
         sessions_dir = project_root / "core" / "logs" / "sessions"
         if sessions_dir.exists():
-            # Look for practice session files
+            # Look for practice session files that have corresponding details files
             for file_path in sessions_dir.glob("practice_*.json"):
                 session_id = file_path.stem
                 
                 # Skip details files
                 if session_id.endswith("_details"):
+                    continue
+                
+                # Only include sessions that have detailed analysis data
+                details_file = sessions_dir / f"{session_id}_details.json"
+                if not details_file.exists():
                     continue
                 
                 try:
@@ -524,6 +529,9 @@ class LogViewer:
         self.log_tree.tag_configure("medical", background="#e6ffe6", foreground="#006600")   # Light green for medical
         self.log_tree.tag_configure("hepa", background="#e6f3ff", foreground="#003366")      # Light blue for HEPA
         self.log_tree.tag_configure("compliance_api", background="#fff0e6", foreground="#cc6600")  # Light orange for API
+        
+        # Refresh the tree to ensure items are visible
+        self.log_tree.update()
     
     def _load_detailed_flagged_items(self, session_id: str) -> List[Dict]:
         """Load detailed flagged items from analysis details file"""
