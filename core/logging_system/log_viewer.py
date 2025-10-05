@@ -183,25 +183,20 @@ class LogViewer:
         critical_label = tk.Label(critical_frame, text="🚨", bg="#ffcccc", fg="#990000", font=('TkDefaultFont', 8))
         critical_label.pack(side=tk.RIGHT, padx=(2, 0))
         
-        # Sample calculation section
+        # Risk calculation section
         calc_frame = ttk.Frame(footer_frame)
         calc_frame.pack(fill=tk.X, padx=5, pady=(5, 5))
         
-        ttk.Label(calc_frame, text="📊 Sample Risk Calculation:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
+        ttk.Label(calc_frame, text="📊 Risk Score Calculation:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
         
-        # Sample calculation content
-        sample_text = """Example: Code with 50 lines containing:
-• 2 PII fields (ssn, email) + 1 PII data instance = 3 items × 5 points × 1.0 multiplier = 15.0 points
-• 1 Medical field (patient_name) + 1 Medical data instance = 2 items × 5 points × 1.2 multiplier = 12.0 points  
-• 1 API field (api_key) + 1 API data instance = 2 items × 5 points × 0.9 multiplier = 9.0 points
-
-Base Score: 15.0 + 12.0 + 9.0 = 36.0 points
-Line Factor: 50 lines → Normalization applied
-Final Score: 36.0 × line_factor = ~72/100 (High Risk)"""
+        # Risk calculation display
+        self.calc_text = tk.Text(calc_frame, height=6, wrap=tk.WORD, font=('TkDefaultFont', 8),
+                                bg="#f8f9fa", relief=tk.SUNKEN, bd=1)
+        self.calc_text.pack(fill=tk.X, pady=(2, 0))
         
-        sample_label = tk.Label(calc_frame, text=sample_text, font=('TkDefaultFont', 7), 
-                               justify=tk.LEFT, bg="#f8f9fa", relief=tk.SUNKEN, bd=1)
-        sample_label.pack(fill=tk.X, pady=(2, 0))
+        # Initial message
+        self.calc_text.insert(tk.END, "Select a session to see detailed risk score calculation...")
+        self.calc_text.config(state=tk.DISABLED)
     
     def load_sessions(self):
         """Load all available sessions"""
@@ -285,6 +280,7 @@ Final Score: 36.0 × line_factor = ~72/100 (High Risk)"""
                 self.display_session_info()
                 self.display_session_logs()
                 self.display_session_stats()
+                self.update_risk_calculation()
     
     def select_session_by_value(self, display_name):
         """Manually select a session by setting both variable and combobox"""
@@ -624,6 +620,171 @@ Final Score: 36.0 × line_factor = ~72/100 (High Risk)"""
         except Exception as e:
             print(f"Error calculating item risk score: {e}")
             return 5.0
+    
+    def update_risk_calculation(self):
+        """Update the risk calculation display for the selected session"""
+        try:
+            if not self.current_session:
+                self.calc_text.config(state=tk.NORMAL)
+                self.calc_text.delete(1.0, tk.END)
+                self.calc_text.insert(tk.END, "Select a session to see detailed risk score calculation...")
+                self.calc_text.config(state=tk.DISABLED)
+                return
+            
+            session_data = self.session_data[self.current_session]
+            
+            # Try to load detailed analysis data
+            detailed_items = self._load_detailed_flagged_items(session_data.get('unique_session_id', self.current_session))
+            
+            if not detailed_items:
+                # Fallback to basic calculation from session data
+                self._show_basic_risk_calculation(session_data)
+                return
+            
+            # Calculate detailed risk breakdown
+            self._show_detailed_risk_calculation(detailed_items, session_data)
+            
+        except Exception as e:
+            print(f"Error updating risk calculation: {e}")
+            self.calc_text.config(state=tk.NORMAL)
+            self.calc_text.delete(1.0, tk.END)
+            self.calc_text.insert(tk.END, f"Error calculating risk score: {str(e)}")
+            self.calc_text.config(state=tk.DISABLED)
+    
+    def _show_basic_risk_calculation(self, session_data):
+        """Show basic risk calculation from session data"""
+        self.calc_text.config(state=tk.NORMAL)
+        self.calc_text.delete(1.0, tk.END)
+        
+        # Get basic metrics
+        final_metrics = session_data.get('final_analysis_metrics', {})
+        total_lines = final_metrics.get('total_lines', 0)
+        total_fields = final_metrics.get('total_sensitive_fields', 0)
+        total_data = final_metrics.get('total_sensitive_data', 0)
+        avg_risk_score = final_metrics.get('average_risk_score', 0)
+        risk_level = final_metrics.get('risk_level', 'Unknown')
+        
+        calc_text = f"📊 Basic Risk Calculation:\n\n"
+        calc_text += f"• Total Lines Analyzed: {total_lines}\n"
+        calc_text += f"• Sensitive Fields Found: {total_fields}\n"
+        calc_text += f"• Sensitive Data Instances: {total_data}\n"
+        calc_text += f"• Total Items: {total_fields + total_data}\n\n"
+        
+        if total_fields + total_data > 0:
+            # Basic calculation
+            base_score = (total_fields * 5) + (total_data * 8)
+            calc_text += f"• Base Score: ({total_fields} fields × 5) + ({total_data} data × 8) = {base_score} points\n"
+            calc_text += f"• Line Normalization: Applied for {total_lines} lines\n"
+            calc_text += f"• Final Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n"
+            calc_text += f"Note: Detailed breakdown available for sessions with flagged items data."
+        else:
+            calc_text += f"• No sensitive data detected\n"
+            calc_text += f"• Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})"
+        
+        self.calc_text.insert(tk.END, calc_text)
+        self.calc_text.config(state=tk.DISABLED)
+    
+    def _show_detailed_risk_calculation(self, detailed_items, session_data):
+        """Show detailed risk calculation from flagged items"""
+        self.calc_text.config(state=tk.NORMAL)
+        self.calc_text.delete(1.0, tk.END)
+        
+        # Aggregate data by category
+        category_data = {
+            'pii': {'fields': 0, 'data': 0, 'items': []},
+            'medical': {'fields': 0, 'data': 0, 'items': []},
+            'hepa': {'fields': 0, 'data': 0, 'items': []},
+            'compliance_api': {'fields': 0, 'data': 0, 'items': []}
+        }
+        
+        total_risk_score = 0
+        analysis_count = 0
+        
+        for item in detailed_items:
+            item_type = item.get('type', '')
+            item_name = item.get('name', '')
+            item_category = item.get('category', '').lower()
+            
+            if item_category in category_data:
+                if item_type == 'sensitive_field':
+                    category_data[item_category]['fields'] += 1
+                elif item_type == 'sensitive_data':
+                    category_data[item_category]['data'] += 1
+                
+                category_data[item_category]['items'].append({
+                    'type': item_type,
+                    'name': item_name,
+                    'line': item.get('line', 0)
+                })
+            
+            total_risk_score += item.get('analysis_risk_score', 0)
+            analysis_count += 1
+        
+        # Get session metrics
+        final_metrics = session_data.get('final_analysis_metrics', {})
+        avg_risk_score = final_metrics.get('average_risk_score', 0)
+        risk_level = final_metrics.get('risk_level', 'Unknown')
+        total_lines = final_metrics.get('total_lines', 0)
+        
+        # Build calculation text
+        calc_text = f"📊 Detailed Risk Calculation:\n\n"
+        calc_text += f"Session Overview:\n"
+        calc_text += f"• Total Lines: {total_lines}\n"
+        calc_text += f"• Analyses: {analysis_count}\n"
+        calc_text += f"• Final Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n"
+        
+        calc_text += f"Category Breakdown:\n"
+        
+        category_names = {
+            'pii': 'PII Data',
+            'medical': 'Medical Data',
+            'hepa': 'HEPA Data',
+            'compliance_api': 'API/Security Data'
+        }
+        
+        category_multipliers = {
+            'pii': 1.0,
+            'medical': 1.2,
+            'hepa': 1.1,
+            'compliance_api': 0.9
+        }
+        
+        total_base_score = 0
+        
+        for category, data in category_data.items():
+            if data['fields'] > 0 or data['data'] > 0:
+                fields_score = data['fields'] * 5
+                data_score = data['data'] * 8
+                category_base = fields_score + data_score
+                multiplier = category_multipliers.get(category, 1.0)
+                category_score = category_base * multiplier
+                total_base_score += category_score
+                
+                calc_text += f"• {category_names.get(category, category.title())}:\n"
+                calc_text += f"  - Fields: {data['fields']} × 5 = {fields_score} points\n"
+                calc_text += f"  - Data: {data['data']} × 8 = {data_score} points\n"
+                calc_text += f"  - Subtotal: {category_base} × {multiplier} = {category_score:.1f} points\n"
+                
+                # Show specific items
+                if data['items']:
+                    calc_text += f"  - Items: "
+                    item_names = [item['name'][:15] + "..." if len(item['name']) > 15 else item['name'] 
+                                for item in data['items'][:3]]
+                    calc_text += f"{', '.join(item_names)}"
+                    if len(data['items']) > 3:
+                        calc_text += f" (+{len(data['items'])-3} more)"
+                    calc_text += "\n"
+                calc_text += "\n"
+        
+        calc_text += f"Calculation Summary:\n"
+        calc_text += f"• Base Score: {total_base_score:.1f} points\n"
+        calc_text += f"• Line Normalization: Applied for {total_lines} lines\n"
+        calc_text += f"• Final Score: {avg_risk_score:.1f}/100\n"
+        calc_text += f"• Risk Level: {risk_level.upper()}\n\n"
+        calc_text += f"Multipliers: Medical (1.2x), HEPA (1.1x), PII (1.0x), API (0.9x)"
+        
+        self.calc_text.insert(tk.END, calc_text)
+        self.calc_text.config(state=tk.DISABLED)
     
     def display_session_stats(self):
         """Display session statistics"""
