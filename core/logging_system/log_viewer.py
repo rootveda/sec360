@@ -461,7 +461,7 @@ class LogViewer:
                         breakdown += "\n"
             
             breakdown += f"\n📈 Risk Calculation:\n"
-            breakdown += f"• Base score from fields and data instances\n"
+            breakdown += f"• Base score: Fields × 0.1 + Data × 8\n"
             breakdown += f"• Category multipliers applied (Medical: 1.2x, HEPA: 1.1x, PII: 1.0x, API: 0.9x)\n"
             breakdown += f"• Line count normalization applied\n"
             breakdown += f"• Final score capped at 100\n"
@@ -649,8 +649,8 @@ class LogViewer:
         
         if total_fields + total_data > 0:
             # Basic calculation
-            base_score = (total_fields * 5) + (total_data * 8)
-            self.calc_text.insert(tk.END, f"• Base Score: ({total_fields} fields × 5) + ({total_data} data × 8) = {base_score} points\n", "calculation")
+            base_score = (total_fields * 0.1) + (total_data * 8)
+            self.calc_text.insert(tk.END, f"• Base Score: ({total_fields} fields × 0.1) + ({total_data} data × 8) = {base_score} points\n", "calculation")
             self.calc_text.insert(tk.END, f"• Line Normalization: Applied for {total_lines} lines\n", "calculation")
             self.calc_text.insert(tk.END, f"• Final Risk Score: {avg_risk_score:.1f}/100 ({risk_level.upper()})\n\n", "score")
             self.calc_text.insert(tk.END, f"Note: Detailed breakdown available for sessions with flagged items data.", "items")
@@ -728,7 +728,7 @@ class LogViewer:
         
         for category, data in category_data.items():
             if data['fields'] > 0 or data['data'] > 0:
-                fields_score = data['fields'] * 5
+                fields_score = data['fields'] * 0.1
                 data_score = data['data'] * 8
                 category_base = fields_score + data_score
                 multiplier = category_multipliers.get(category, 1.0)
@@ -736,7 +736,7 @@ class LogViewer:
                 total_base_score += category_score
                 
                 self.calc_text.insert(tk.END, f"• {category_names.get(category, category.title())}:\n", "category")
-                self.calc_text.insert(tk.END, f"  - Fields: {data['fields']} × 5 = {fields_score} points\n", "calculation")
+                self.calc_text.insert(tk.END, f"  - Fields: {data['fields']} × 0.1 = {fields_score} points\n", "calculation")
                 self.calc_text.insert(tk.END, f"  - Data: {data['data']} × 8 = {data_score} points\n", "calculation")
                 self.calc_text.insert(tk.END, f"  - Subtotal: {category_base} × {multiplier} = {category_score:.1f} points\n", "score")
                 

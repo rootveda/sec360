@@ -89,7 +89,7 @@ class RiskCalculator:
             return 0
         
         # Normalize by lines of code (more lines = lower risk per line)
-        field_risk = min(50, (fields * 5) * self.weights['fields_weight'])
+        field_risk = min(50, (fields * 0.1) * self.weights['fields_weight'])
         data_risk = min(40, (data * 4) * self.weights['data_weight'])
         
         # Line normalization (inverse relationship)
