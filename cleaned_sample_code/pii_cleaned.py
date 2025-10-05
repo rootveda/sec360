@@ -1,73 +1,105 @@
-# Sample Code File 2: Personal Identifiable Information (Cleaned)
-# This file contains sanitized user data for secure testing
+# Cleaned Code File 2: Personal Identifiable Information (PII) - Cleaned
+# This file has been cleaned of sensitive data while maintaining the same structure
 
 def process_user_data():
-    # User identification
-    user_id = "default_value"
-    id_number = "000-00-0000"
+    # Social Security Numbers
+    ssn_1 = ""  # Cleared sensitive data
+    ssn_2 = ""  # Cleared sensitive data
     
-    # Payment data
-    card_number = "0000-0000-0000-0000"
-    payment_data = "0000000000000000"
+    # Credit Card Numbers
+    credit_card_1 = ""  # Cleared sensitive data
+    credit_card_2 = ""  # Cleared sensitive data
     
-    # Contact information
-    email_address = "test@example.com"
-    user_email = ""
+    # Email addresses
+    email_1 = ""  # Cleared sensitive data
+    email_2 = ""  # Cleared sensitive data
     
     # Phone numbers
-    phone_number = "+1-000-000-0000"
-    contact_phone = "(000) 000-0000"
+    phone_1 = ""  # Cleared sensitive data
+    phone_2 = ""  # Cleared sensitive data
     
-    # Address data
-    user_address = "000 Main Street, TestCity, ST 00000"
-    billing_address = ""
+    # Addresses
+    address_1 = ""  # Cleared sensitive data
+    address_2 = ""  # Cleared sensitive data
     
-    # Birth information
-    birth_date = "01/01/1990"
-    date_info = "12-31-1990"
+    # Date of birth
+    dob_1 = ""  # Cleared sensitive data
+    dob_2 = ""  # Cleared sensitive data
     
     return {}
 
 def create_user_profile():
-    profile_data = {
-        "first_name": "TestUser",
-        "last_name": "TestSubject",
+    user_data = {
+        "first_name": "",  # Cleared sensitive data
+        "last_name": "",  # Cleared sensitive data
         "address": {
-            "street": "000 Main Street",
-            "city": "TestCity",
-            "state": "TS",
-            "zip_code": "00000"
+            "street": "",  # Cleared sensitive data
+            "city": "",  # Cleared sensitive data
+            "state": "",  # Cleared sensitive data
+            "zip_code": ""  # Cleared sensitive data
         },
-        "payment_card": {
-            "expiry": "12/25",
-            "cvv": "000"
+        "credit_card": {
+            "expiry": "",  # Cleared sensitive data
+            "cvv": ""  # Cleared sensitive data
         }
     }
     
-    return profile_data
+    return user_data
 
 def process_financial_data():
-    # Account data
-    account_data = {
-        "account_number": "0000000000",
-        "routing_number": "000000000"
+    # Bank account information
+    bank_account = {
+        "account_number": "",  # Cleared sensitive data
+        "routing_number": ""  # Cleared sensitive data
     }
     
-    # Tax data
-    tax_data = {
-        "tax_id": "00-0000000",
-        "filing_status": "single",
-        "annual_income": 50000
+    # Tax information
+    tax_info = {
+        "tax_id": "",  # Cleared sensitive data
+        "filing_status": "",  # Cleared sensitive data
+        "annual_income": 0  # Cleared sensitive data
     }
     
-    return {"account": account_data, "tax": tax_data}
+    return {"bank": bank_account, "tax": tax_info}
 
-# User configuration
-config_data = {
+# Configuration with PII (cleaned)
+user_config = {
     "default_user": {
-        "name": "default_value"
+        "name": "",  # Cleared sensitive data
+        "ssn": "",  # Cleared sensitive data
+        "email": "",  # Cleared sensitive data
+        "phone": "",  # Cleared sensitive data
+        "credit_card": "",  # Cleared sensitive data
+        "address": ""  # Cleared sensitive data
     },
     "backup_user": {
-        "name": ""
+        "name": "",  # Cleared sensitive data
+        "ssn": "",  # Cleared sensitive data
+        "email": "",  # Cleared sensitive data
+        "phone": "",  # Cleared sensitive data
+        "credit_card": "",  # Cleared sensitive data
+        "address": ""  # Cleared sensitive data
+    },
+    "admin_user": {
+        "name": "",  # Cleared sensitive data
+        "ssn": "",  # Cleared sensitive data
+        "email": "",  # Cleared sensitive data
+        "phone": "",  # Cleared sensitive data
+        "credit_card": "",  # Cleared sensitive data
+        "address": ""  # Cleared sensitive data
     }
+}
+
+# Additional sensitive data arrays (cleaned)
+customer_data = [
+    {"name": "", "ssn": "", "email": ""},  # Cleared sensitive data
+    {"name": "", "ssn": "", "email": ""},  # Cleared sensitive data
+    {"name": "", "ssn": "", "email": ""}  # Cleared sensitive data
+]
+
+# Financial records (cleaned)
+financial_records = {
+    "account_1": {"number": "", "balance": 0, "ssn": ""},  # Cleared sensitive data
+    "account_2": {"number": "", "balance": 0, "ssn": ""},  # Cleared sensitive data
+    "account_3": {"number": "", "balance": 0, "ssn": ""}  # Cleared sensitive data
 }

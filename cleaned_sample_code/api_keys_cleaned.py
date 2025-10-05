@@ -1,43 +1,57 @@
-# Sample Code File 1: API Keys and Tokens (Cleaned)
-# This file contains sanitized configurations for secure testing
+# Cleaned Code File 1: API Keys and Tokens (Cleaned)
+# This file has been cleaned of sensitive data while maintaining the same structure
 
 def authenticate_user():
-    # Authentication configuration
-    auth_id = "default_value"
+    # API Key for external service
+    api_key = ""  # Cleared sensitive data
     
-    # Encryption configuration
-    encryption_key = "default_value"
     
-    # Authentication token
-    auth_token = "default_value"
+    # Secret key for encryption
+    secret_key = ""  # Cleared sensitive data
     
-    # Database connection configuration
-    db_config = ""
+    # Bearer token
+    bearer_token = ""  # Cleared sensitive data
     
-    return {"status": "configured"}
+    # Database connection string with password
+    db_connection = ""  # Cleared sensitive data
+    
+    return {"status": "authenticated"}
 
 def make_api_call():
-    # OAuth configuration
-    oauth_token = ""
+    # OAuth token
+    oauth_token = ""  # Cleared sensitive data
     
-    # JWT configuration
-    jwt_token = ""
+    # JWT token
+    jwt_token = ""  # Cleared sensitive data
     
-    # API endpoint configuration
-    endpoint = "https://example.com/v1/data?key=example_key"
+    # API endpoint with embedded credentials
+    endpoint = ""  # Cleared sensitive data
     
     headers = {
-        "Authorization": f"Bearer {auth_token}",
-        "X-API-Key": auth_id
+        "Authorization": f"Bearer {bearer_token}",
+        "X-API-Key": api_key
     }
     
     return headers
 
-# Configuration settings
-app_config = {
-    "service_config": {
-        "service_a": "",
-        "service_b": "", 
-        "service_c": ""
+# Configuration with embedded secrets (cleaned)
+config = {
+    "api_keys": {
+        "stripe": "",  # Cleared sensitive data
+        "aws": "",  # Cleared sensitive data
+        "google": "",  # Cleared sensitive data
+        "github": "",  # Cleared sensitive data
+        "slack": "",  # Cleared sensitive data
+        "discord": ""  # Cleared sensitive data
+    },
+    "database": {
+        "password": "",  # Cleared sensitive data
+        "connection_string": "",  # Cleared sensitive data
+        "redis_auth": ""  # Cleared sensitive data
+    },
+    "encryption": {
+        "private_key": "",  # Cleared sensitive data
+        "secret_salt": "",  # Cleared sensitive data
+        "jwt_secret": ""  # Cleared sensitive data
     }
 }

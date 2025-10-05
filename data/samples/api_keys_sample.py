@@ -37,8 +37,21 @@ def make_api_call():
 # Configuration with embedded secrets
 config = {
     "api_keys": {
-        "stripe": "sk_test_51234567890abcdef1234567890abcdef",
+        "stripe": "sk_test_FAKE_STRIPE_KEY_FOR_DEMO_PURPOSES_ONLY",
         "aws": "AKIAIOSFODNN7EXAMPLE",
-        "google": "AIzaSyBOti4mM-6x9WDnZIjIey21x6Q6x9WDnZI"
+        "google": "AIzaSyBOti4mM-6x9WDnZIjIey21x6Q6x9WDnZI",
+        "github": "ghp_FAKE_GITHUB_TOKEN_FOR_DEMO_PURPOSES_ONLY",
+        "slack": "xoxb-FAKE-SLACK-TOKEN-FOR-DEMO-PURPOSES-ONLY",
+        "discord": "FAKE-DISCORD-TOKEN-FOR-DEMO-PURPOSES-ONLY"
+    },
+    "database": {
+        "password": "SuperSecretPassword123!",
+        "connection_string": "mongodb://admin:password456@cluster0.mongodb.net:27017/mydb",
+        "redis_auth": "redis://:auth_token_789@redis.example.com:6379"
+    },
+    "encryption": {
+        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...",
+        "secret_salt": "mySecretSalt123456789",
+        "jwt_secret": "jwt_secret_key_abcdef123456789"
     }
 }
