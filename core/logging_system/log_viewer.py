@@ -191,7 +191,7 @@ class LogViewer:
         
         # Risk calculation display
         self.calc_text = tk.Text(calc_frame, height=6, wrap=tk.WORD, font=('TkDefaultFont', 8),
-                                bg="#f8f9fa", relief=tk.SUNKEN, bd=1)
+                                bg="#f8f9fa", fg="#000000", relief=tk.SUNKEN, bd=1)
         self.calc_text.pack(fill=tk.X, pady=(2, 0))
         
         # Initial message
