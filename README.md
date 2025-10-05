@@ -59,7 +59,7 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/sec360.git
+git clone https://github.com/rootveda/sec360.git
 cd sec360
 
 # Make scripts executable (Unix/macOS)
