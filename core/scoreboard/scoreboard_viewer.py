@@ -782,15 +782,13 @@ class ScoreboardViewer:
         risk_points = max(0.0, 100.0 - risk_score * 1.2)
         
         # 4. Efficiency Points (optimal session duration)
-        if duration_minutes <= 1.0:  # Too fast
-            efficiency_points = 10.0
-        elif duration_minutes <= 5.0:  # Ideal range
+        if duration_minutes <= 3.0:      # 0-3 mins = Excellent
             efficiency_points = 25.0
-        elif duration_minutes <= 10.0:  # Good
+        elif duration_minutes <= 4.0:    # 3-4 mins = Good
             efficiency_points = 20.0
-        elif duration_minutes <= 15.0:  # Acceptable
+        elif duration_minutes <= 5.0:    # 4-5 mins = Acceptable
             efficiency_points = 15.0
-        else:  # Too slow
+        else:                            # >5 mins = Fixed penalty
             efficiency_points = 5.0
         
         # 5. Lines Bonus (substantial code analysis)
