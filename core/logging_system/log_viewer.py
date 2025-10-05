@@ -65,20 +65,20 @@ class LogViewer:
         logs_frame.pack(fill=tk.BOTH, expand=True)
         
         # Create treeview for logs
-        columns = ('Timestamp', 'Flag Type', 'Content', 'Confidence', 'Context')
+        columns = ('Timestamp', 'Flag Type', 'Content', 'Risk Score', 'Context')
         self.log_tree = ttk.Treeview(logs_frame, columns=columns, show='headings', height=15)
         
         # Configure columns
         self.log_tree.heading('Timestamp', text='Timestamp')
         self.log_tree.heading('Flag Type', text='Flag Type')
         self.log_tree.heading('Content', text='Content')
-        self.log_tree.heading('Confidence', text='Confidence')
+        self.log_tree.heading('Risk Score', text='Risk Score')
         self.log_tree.heading('Context', text='Context')
         
         self.log_tree.column('Timestamp', width=150)
         self.log_tree.column('Flag Type', width=100)
         self.log_tree.column('Content', width=200)
-        self.log_tree.column('Confidence', width=80)
+        self.log_tree.column('Risk Score', width=80)
         self.log_tree.column('Context', width=400)
         
         # Scrollbars
@@ -94,12 +94,26 @@ class LogViewer:
         # Bind double-click event
         self.log_tree.bind('<Double-1>', self.on_log_double_click)
         
-        # Bottom frame for statistics
-        stats_frame = ttk.LabelFrame(main_frame, text="Session Statistics")
-        stats_frame.pack(fill=tk.X, pady=(10, 0))
+        # Risk calculation section (moved up)
+        calc_frame = ttk.LabelFrame(main_frame, text="📊 Risk Score Calculation")
+        calc_frame.pack(fill=tk.X, pady=(10, 0))
         
-        self.stats_text = tk.Text(stats_frame, height=8, wrap=tk.WORD)
-        self.stats_text.pack(fill=tk.X, padx=5, pady=5)
+        # Risk calculation display
+        self.calc_text = tk.Text(calc_frame, height=20, wrap=tk.WORD, font=('TkDefaultFont', 12, 'bold'),
+                                bg="#f8f9fa", fg="#000000", relief=tk.SUNKEN, bd=1)
+        self.calc_text.pack(fill=tk.X, pady=(2, 0))
+        
+        # Configure text tags for color coding
+        self.calc_text.tag_configure("header", foreground="#2c3e50", font=('TkDefaultFont', 12, 'bold'))
+        self.calc_text.tag_configure("category", foreground="#8e44ad", font=('TkDefaultFont', 11, 'bold'))
+        self.calc_text.tag_configure("calculation", foreground="#27ae60", font=('TkDefaultFont', 11))
+        self.calc_text.tag_configure("score", foreground="#e74c3c", font=('TkDefaultFont', 11, 'bold'))
+        self.calc_text.tag_configure("items", foreground="#3498db", font=('TkDefaultFont', 10))
+        self.calc_text.tag_configure("summary", foreground="#f39c12", font=('TkDefaultFont', 11, 'bold'))
+        
+        # Initial message
+        self.calc_text.insert(tk.END, "Select a session to see detailed risk score calculation...")
+        self.calc_text.config(state=tk.DISABLED)
         
         # Footer frame for color legend
         footer_frame = ttk.LabelFrame(main_frame, text="Risk Categories & Levels Legend")
@@ -190,21 +204,110 @@ class LogViewer:
         ttk.Label(calc_frame, text="📊 Risk Score Calculation:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
         
         # Risk calculation display
-        self.calc_text = tk.Text(calc_frame, height=10, wrap=tk.WORD, font=('TkDefaultFont', 10, 'bold'),
+        self.calc_text = tk.Text(calc_frame, height=20, wrap=tk.WORD, font=('TkDefaultFont', 12, 'bold'),
                                 bg="#f8f9fa", fg="#000000", relief=tk.SUNKEN, bd=1)
         self.calc_text.pack(fill=tk.X, pady=(2, 0))
         
         # Configure text tags for color coding
-        self.calc_text.tag_configure("header", foreground="#2c3e50", font=('TkDefaultFont', 10, 'bold'))
-        self.calc_text.tag_configure("category", foreground="#8e44ad", font=('TkDefaultFont', 9, 'bold'))
-        self.calc_text.tag_configure("calculation", foreground="#27ae60", font=('TkDefaultFont', 9))
-        self.calc_text.tag_configure("score", foreground="#e74c3c", font=('TkDefaultFont', 9, 'bold'))
-        self.calc_text.tag_configure("items", foreground="#3498db", font=('TkDefaultFont', 8))
-        self.calc_text.tag_configure("summary", foreground="#f39c12", font=('TkDefaultFont', 9, 'bold'))
+        self.calc_text.tag_configure("header", foreground="#2c3e50", font=('TkDefaultFont', 12, 'bold'))
+        self.calc_text.tag_configure("category", foreground="#8e44ad", font=('TkDefaultFont', 11, 'bold'))
+        self.calc_text.tag_configure("calculation", foreground="#27ae60", font=('TkDefaultFont', 11))
+        self.calc_text.tag_configure("score", foreground="#e74c3c", font=('TkDefaultFont', 11, 'bold'))
+        self.calc_text.tag_configure("items", foreground="#3498db", font=('TkDefaultFont', 10))
+        self.calc_text.tag_configure("summary", foreground="#f39c12", font=('TkDefaultFont', 11, 'bold'))
         
         # Initial message
         self.calc_text.insert(tk.END, "Select a session to see detailed risk score calculation...")
         self.calc_text.config(state=tk.DISABLED)
+        
+        # Footer frame for color legend and session statistics
+        footer_frame = ttk.LabelFrame(main_frame, text="Risk Categories & Levels Legend")
+        footer_frame.pack(fill=tk.X, pady=(5, 0))
+        
+        # Create legend content
+        legend_frame = ttk.Frame(footer_frame)
+        legend_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        # Risk Categories section
+        categories_frame = ttk.Frame(legend_frame)
+        categories_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        
+        ttk.Label(categories_frame, text="Risk Categories:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.W)
+        
+        categories_content = ttk.Frame(categories_frame)
+        categories_content.pack(fill=tk.X, pady=(2, 0))
+        
+        # PII category
+        pii_frame = ttk.Frame(categories_content)
+        pii_frame.pack(side=tk.LEFT, padx=(0, 15))
+        pii_label = tk.Label(pii_frame, text="🔴 PII", bg="#ffe6e6", fg="#cc0000", font=('TkDefaultFont', 8))
+        pii_label.pack(side=tk.LEFT)
+        ttk.Label(pii_frame, text="Personal Information", font=('TkDefaultFont', 8)).pack(side=tk.LEFT, padx=(2, 0))
+        
+        # Medical category
+        medical_frame = ttk.Frame(categories_content)
+        medical_frame.pack(side=tk.LEFT, padx=(0, 15))
+        medical_label = tk.Label(medical_frame, text="🟢 Medical", bg="#e6ffe6", fg="#006600", font=('TkDefaultFont', 8))
+        medical_label.pack(side=tk.LEFT)
+        ttk.Label(medical_frame, text="HIPAA Data", font=('TkDefaultFont', 8)).pack(side=tk.LEFT, padx=(2, 0))
+        
+        # HEPA category
+        hepa_frame = ttk.Frame(categories_content)
+        hepa_frame.pack(side=tk.LEFT, padx=(0, 15))
+        hepa_label = tk.Label(hepa_frame, text="🔵 HEPA", bg="#e6f3ff", fg="#003366", font=('TkDefaultFont', 8))
+        hepa_label.pack(side=tk.LEFT)
+        ttk.Label(hepa_frame, text="Healthcare Data", font=('TkDefaultFont', 8)).pack(side=tk.LEFT, padx=(2, 0))
+        
+        # API/Security category
+        api_frame = ttk.Frame(categories_content)
+        api_frame.pack(side=tk.LEFT, padx=(0, 15))
+        api_label = tk.Label(api_frame, text="🟠 API/Security", bg="#fff0e6", fg="#cc6600", font=('TkDefaultFont', 8))
+        api_label.pack(side=tk.LEFT)
+        ttk.Label(api_frame, text="Credentials & Keys", font=('TkDefaultFont', 8)).pack(side=tk.LEFT, padx=(2, 0))
+        
+        # Risk Levels section
+        levels_frame = ttk.Frame(legend_frame)
+        levels_frame.pack(side=tk.RIGHT, fill=tk.X, expand=True)
+        
+        ttk.Label(levels_frame, text="Risk Levels:", font=('TkDefaultFont', 9, 'bold')).pack(anchor=tk.E)
+        
+        levels_content = ttk.Frame(levels_frame)
+        levels_content.pack(fill=tk.X, pady=(2, 0))
+        
+        # Low risk
+        low_frame = ttk.Frame(levels_content)
+        low_frame.pack(side=tk.RIGHT, padx=(5, 0))
+        ttk.Label(low_frame, text="Low (0-29)", font=('TkDefaultFont', 8)).pack(side=tk.RIGHT)
+        low_label = tk.Label(low_frame, text="🟢", bg="#e6ffe6", fg="#006600", font=('TkDefaultFont', 8))
+        low_label.pack(side=tk.RIGHT, padx=(2, 0))
+        
+        # Medium risk
+        medium_frame = ttk.Frame(levels_content)
+        medium_frame.pack(side=tk.RIGHT, padx=(5, 0))
+        ttk.Label(medium_frame, text="Medium (30-59)", font=('TkDefaultFont', 8)).pack(side=tk.RIGHT)
+        medium_label = tk.Label(medium_frame, text="🟡", bg="#fff8dc", fg="#b8860b", font=('TkDefaultFont', 8))
+        medium_label.pack(side=tk.RIGHT, padx=(2, 0))
+        
+        # High risk
+        high_frame = ttk.Frame(levels_content)
+        high_frame.pack(side=tk.RIGHT, padx=(5, 0))
+        ttk.Label(high_frame, text="High (60-79)", font=('TkDefaultFont', 8)).pack(side=tk.RIGHT)
+        high_label = tk.Label(high_frame, text="🔴", bg="#ffe6e6", fg="#cc0000", font=('TkDefaultFont', 8))
+        high_label.pack(side=tk.RIGHT, padx=(2, 0))
+        
+        # Critical risk
+        critical_frame = ttk.Frame(levels_content)
+        critical_frame.pack(side=tk.RIGHT, padx=(5, 0))
+        ttk.Label(critical_frame, text="Critical (80-100)", font=('TkDefaultFont', 8)).pack(side=tk.RIGHT)
+        critical_label = tk.Label(critical_frame, text="🚨", bg="#ffcccc", fg="#990000", font=('TkDefaultFont', 8))
+        critical_label.pack(side=tk.RIGHT, padx=(2, 0))
+        
+        # Session Statistics section (moved to footer)
+        stats_frame = ttk.LabelFrame(main_frame, text="Session Statistics")
+        stats_frame.pack(fill=tk.X, pady=(5, 0))
+        
+        self.stats_text = tk.Text(stats_frame, height=6, wrap=tk.WORD)
+        self.stats_text.pack(fill=tk.X, padx=5, pady=5)
     
     def load_sessions(self):
         """Load all available sessions"""
