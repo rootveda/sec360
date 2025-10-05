@@ -612,19 +612,19 @@ class LogViewer:
                     display_name = item_name[:30] + "..." if len(item_name) > 30 else item_name
                     content = f"Data: {display_name}"
                     flag_type = f"{category}_DATA"
-                else:
-                    content = f"{item_type}: {item_name}"
-                    flag_type = category
-                
-                context = f"Line {line}" if line > 0 else "Unknown line"
-                
-                self.log_tree.insert('', tk.END, values=(
-                    timestamp,
-                    flag_type,
-                    content,
-                    f"{risk_score:.1f}",
-                    context
-                ), tags=[category.lower()])
+        else:
+            content = f"{item_type}: {item_name}"
+            flag_type = category
+        
+        context = f"Line {line}" if line > 0 else "Unknown line"
+        
+        self.log_tree.insert('', tk.END, values=(
+            timestamp,
+            flag_type,
+            content,
+            f"{risk_score:.1f}",
+            context
+        ), tags=[category.lower()])
         
         # Configure tag colors for new types
         self.log_tree.tag_configure("analysis", background="#e6f3ff", foreground="#003366")    # Light blue for analyses
