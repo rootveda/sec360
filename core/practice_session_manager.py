@@ -1084,8 +1084,60 @@ Be educational and helpful, not just critical."""
             
             print(f"Practice session data saved to: {filename}")
             
+            # Also save detailed analysis data to separate file
+            self._save_analysis_details()
+            
         except Exception as e:
             print(f"Error saving practice session data: {e}")
+    
+    def _save_analysis_details(self) -> None:
+        """Save detailed analysis data to separate file"""
+        try:
+            if not self.code_analyses:
+                return  # No analyses to save
+            
+            # Create sessions directory
+            sessions_dir = "core/logs/sessions"
+            os.makedirs(sessions_dir, exist_ok=True)
+            
+            # Create detailed analysis data
+            details_data = {
+                "session_id": self.session_id,
+                "user_name": self.user_name,
+                "session_start_time": self.session_start_time,
+                "analyses": []
+            }
+            
+            # Process each analysis
+            for analysis in self.code_analyses:
+                analysis_result = analysis.get('analysis_result', {})
+                
+                # Extract detailed information
+                analysis_detail = {
+                    "timestamp": analysis.get('timestamp', time.time()),
+                    "code_snippet": analysis.get('code_snippet', ''),
+                    "analysis_details": analysis_result.get('analysis_details', {}),
+                    "risk_score": analysis_result.get('risk_score', 0),
+                    "lines_of_code": analysis_result.get('lines_of_code', 0),
+                    "sensitive_fields": analysis_result.get('sensitive_fields', 0),
+                    "sensitive_data": analysis_result.get('sensitive_data', 0),
+                    "pii_count": analysis_result.get('pii_count', 0),
+                    "hepa_count": analysis_result.get('hepa_count', 0),
+                    "medical_count": analysis_result.get('medical_count', 0),
+                    "compliance_api_count": analysis_result.get('compliance_api_count', 0)
+                }
+                
+                details_data["analyses"].append(analysis_detail)
+            
+            # Save to separate details file
+            details_filename = f"{sessions_dir}/{self.session_id}_details.json"
+            with open(details_filename, 'w', encoding='utf-8') as f:
+                json.dump(details_data, f, indent=2, ensure_ascii=False)
+            
+            print(f"Detailed analysis data saved to: {details_filename}")
+            
+        except Exception as e:
+            print(f"Error saving detailed analysis data: {e}")
     
     def _update_session_info(self, user_id: str, model: str) -> None:
         """Update session information display"""

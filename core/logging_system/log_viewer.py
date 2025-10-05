@@ -224,9 +224,140 @@ class LogViewer:
             info += f"Sensitive Data: {metrics.get('total_sensitive_data', 0)}\n"
             info += f"Risk Score: {metrics.get('average_risk_score', 0):.1f}/100\n"
             info += f"Risk Level: {metrics.get('risk_level', 'Unknown')}\n"
+            
+            # Add detailed risk breakdown if available
+            risk_breakdown = self._get_detailed_risk_breakdown(session_data.get('unique_session_id', self.current_session))
+            if risk_breakdown:
+                info += f"\n🔍 Detailed Risk Breakdown:\n"
+                info += risk_breakdown
         
         self.info_text.delete(1.0, tk.END)
         self.info_text.insert(tk.END, info)
+    
+    def _get_detailed_risk_breakdown(self, session_id: str) -> str:
+        """Get detailed risk breakdown from analysis details file"""
+        try:
+            # Get project root directory
+            project_root = Path(__file__).parent.parent.parent
+            details_file = project_root / "core" / "logs" / "sessions" / f"{session_id}_details.json"
+            
+            if not details_file.exists():
+                return ""  # No detailed data available
+            
+            with open(details_file, 'r', encoding='utf-8') as f:
+                details_data = json.load(f)
+            
+            analyses = details_data.get('analyses', [])
+            if not analyses:
+                return ""
+            
+            # Aggregate data from all analyses
+            breakdown = ""
+            total_risk_score = 0
+            analysis_count = 0
+            
+            # Category totals
+            category_totals = {
+                'pii': {'fields': 0, 'data': 0, 'items': []},
+                'medical': {'fields': 0, 'data': 0, 'items': []},
+                'hepa': {'fields': 0, 'data': 0, 'items': []},
+                'compliance_api': {'fields': 0, 'data': 0, 'items': []}
+            }
+            
+            for analysis in analyses:
+                analysis_details = analysis.get('analysis_details', {})
+                flagged_items = analysis_details.get('flagged_items', [])
+                
+                total_risk_score += analysis.get('risk_score', 0)
+                analysis_count += 1
+                
+                # Process flagged items
+                for item in flagged_items:
+                    item_type = item.get('type', '')
+                    item_name = item.get('name', '')
+                    item_category = item.get('category', '').lower()
+                    
+                    if item_category in category_totals:
+                        if item_type == 'sensitive_field':
+                            category_totals[item_category]['fields'] += 1
+                        elif item_type == 'sensitive_data':
+                            category_totals[item_category]['data'] += 1
+                        
+                        category_totals[item_category]['items'].append({
+                            'type': item_type,
+                            'name': item_name,
+                            'line': item.get('line', 0)
+                        })
+            
+            if analysis_count == 0:
+                return ""
+            
+            avg_risk_score = total_risk_score / analysis_count
+            
+            # Build breakdown text
+            breakdown += f"Average Risk Score: {avg_risk_score:.1f}/100\n\n"
+            
+            # Category breakdown
+            breakdown += "📊 Category Contributions:\n"
+            
+            category_names = {
+                'pii': 'PII Data',
+                'medical': 'Medical Data', 
+                'hepa': 'HEPA Data',
+                'compliance_api': 'API/Security Data'
+            }
+            
+            category_multipliers = {
+                'pii': 1.0,
+                'medical': 1.2,
+                'hepa': 1.1,
+                'compliance_api': 0.9
+            }
+            
+            for category, data in category_totals.items():
+                if data['fields'] > 0 or data['data'] > 0:
+                    total_items = data['fields'] + data['data']
+                    multiplier = category_multipliers.get(category, 1.0)
+                    base_score = total_items * 5 * multiplier
+                    
+                    breakdown += f"• {category_names.get(category, category.title())} ({data['fields']} fields + {data['data']} instances): {base_score:.1f} points\n"
+                    
+                    # Show individual items
+                    if data['items']:
+                        breakdown += f"  - Fields: "
+                        fields = [item['name'] for item in data['items'] if item['type'] == 'sensitive_field']
+                        if fields:
+                            breakdown += f"{', '.join(fields[:3])}"  # Show first 3
+                            if len(fields) > 3:
+                                breakdown += f" (+{len(fields)-3} more)"
+                        breakdown += "\n"
+                        
+                        breakdown += f"  - Data: "
+                        data_items = [item['name'] for item in data['items'] if item['type'] == 'sensitive_data']
+                        if data_items:
+                            # Truncate long data values
+                            display_data = []
+                            for item in data_items[:2]:  # Show first 2
+                                if len(item) > 20:
+                                    display_data.append(item[:17] + "...")
+                                else:
+                                    display_data.append(item)
+                            breakdown += f"{', '.join(display_data)}"
+                            if len(data_items) > 2:
+                                breakdown += f" (+{len(data_items)-2} more)"
+                        breakdown += "\n"
+            
+            breakdown += f"\n📈 Risk Calculation:\n"
+            breakdown += f"• Base score from fields and data instances\n"
+            breakdown += f"• Category multipliers applied (Medical: 1.2x, HEPA: 1.1x, PII: 1.0x, API: 0.9x)\n"
+            breakdown += f"• Line count normalization applied\n"
+            breakdown += f"• Final score capped at 100\n"
+            
+            return breakdown
+            
+        except Exception as e:
+            print(f"Error loading detailed risk breakdown: {e}")
+            return ""
     
     def display_session_logs(self):
         """Display session logs in treeview"""
@@ -277,10 +408,120 @@ class LogViewer:
                     "Final Results"
                 ), tags=["metrics"])
         
+        # Try to load detailed flagged items and display them
+        detailed_items = self._load_detailed_flagged_items(session_data.get('unique_session_id', self.current_session))
+        
+        if detailed_items:
+            # Clear existing items and show detailed flagged items
+            for item in self.log_tree.get_children():
+                self.log_tree.delete(item)
+            
+            for item in detailed_items:
+                timestamp = item.get('timestamp', 'Unknown')
+                item_type = item.get('type', 'Unknown')
+                item_name = item.get('name', 'Unknown')
+                category = item.get('category', 'Unknown')
+                line = item.get('line', 0)
+                
+                # Calculate risk score for this item
+                risk_score = self._calculate_item_risk_score(item)
+                
+                # Format display
+                if item_type == 'sensitive_field':
+                    content = f"Field: {item_name}"
+                    flag_type = f"{category}_FIELD"
+                elif item_type == 'sensitive_data':
+                    # Truncate long data values
+                    display_name = item_name[:30] + "..." if len(item_name) > 30 else item_name
+                    content = f"Data: {display_name}"
+                    flag_type = f"{category}_DATA"
+                else:
+                    content = f"{item_type}: {item_name}"
+                    flag_type = category
+                
+                context = f"Line {line}" if line > 0 else "Unknown line"
+                
+                self.log_tree.insert('', tk.END, values=(
+                    timestamp,
+                    flag_type,
+                    content,
+                    f"{risk_score:.1f}",
+                    context
+                ), tags=[category.lower()])
+        
         # Configure tag colors for new types
         self.log_tree.tag_configure("analysis", background="#e6f3ff", foreground="#003366")    # Light blue for analyses
         self.log_tree.tag_configure("session", background="#f0f8ff", foreground="#4169e1")    # Light blue for session info
         self.log_tree.tag_configure("metrics", background="#fff8dc", foreground="#b8860b")   # Light yellow for metrics
+        self.log_tree.tag_configure("pii", background="#ffe6e6", foreground="#cc0000")       # Light red for PII
+        self.log_tree.tag_configure("medical", background="#e6ffe6", foreground="#006600")   # Light green for medical
+        self.log_tree.tag_configure("hepa", background="#e6f3ff", foreground="#003366")      # Light blue for HEPA
+        self.log_tree.tag_configure("compliance_api", background="#fff0e6", foreground="#cc6600")  # Light orange for API
+    
+    def _load_detailed_flagged_items(self, session_id: str) -> List[Dict]:
+        """Load detailed flagged items from analysis details file"""
+        try:
+            # Get project root directory
+            project_root = Path(__file__).parent.parent.parent
+            details_file = project_root / "core" / "logs" / "sessions" / f"{session_id}_details.json"
+            
+            if not details_file.exists():
+                return []
+            
+            with open(details_file, 'r', encoding='utf-8') as f:
+                details_data = json.load(f)
+            
+            analyses = details_data.get('analyses', [])
+            flagged_items = []
+            
+            for analysis in analyses:
+                analysis_details = analysis.get('analysis_details', {})
+                items = analysis_details.get('flagged_items', [])
+                
+                for item in items:
+                    # Add timestamp and analysis context to each item
+                    flagged_item = item.copy()
+                    flagged_item['timestamp'] = analysis.get('timestamp', 0)
+                    flagged_item['analysis_risk_score'] = analysis.get('risk_score', 0)
+                    flagged_items.append(flagged_item)
+            
+            return flagged_items
+            
+        except Exception as e:
+            print(f"Error loading detailed flagged items: {e}")
+            return []
+    
+    def _calculate_item_risk_score(self, item: Dict) -> float:
+        """Calculate risk score for individual flagged item"""
+        try:
+            item_type = item.get('type', '')
+            category = item.get('category', '').lower()
+            
+            # Base score by type
+            if item_type == 'sensitive_field':
+                base_score = 5.0
+            elif item_type == 'sensitive_data':
+                base_score = 8.0
+            else:
+                base_score = 3.0
+            
+            # Category multipliers
+            category_multipliers = {
+                'pii': 1.0,
+                'medical': 1.2,
+                'hepa': 1.1,
+                'compliance_api': 0.9
+            }
+            
+            multiplier = category_multipliers.get(category, 1.0)
+            risk_score = base_score * multiplier
+            
+            # Cap at reasonable individual item score
+            return min(risk_score, 15.0)
+            
+        except Exception as e:
+            print(f"Error calculating item risk score: {e}")
+            return 5.0
     
     def display_session_stats(self):
         """Display session statistics"""
