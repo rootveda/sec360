@@ -319,17 +319,12 @@ class LogViewer:
         project_root = Path(__file__).parent.parent.parent
         sessions_dir = project_root / "core" / "logs" / "sessions"
         if sessions_dir.exists():
-            # Look for practice session files that have corresponding details files
+            # Look for practice session files
             for file_path in sessions_dir.glob("practice_*.json"):
                 session_id = file_path.stem
                 
                 # Skip details files
                 if session_id.endswith("_details"):
-                    continue
-                
-                # Only include sessions that have detailed analysis data
-                details_file = sessions_dir / f"{session_id}_details.json"
-                if not details_file.exists():
                     continue
                 
                 try:
@@ -703,6 +698,8 @@ class LogViewer:
     def update_risk_calculation(self):
         """Update the risk calculation display for the selected session"""
         try:
+            print(f"DEBUG: update_risk_calculation called, current_session: {self.current_session}")
+            
             if not self.current_session:
                 self.calc_text.config(state=tk.NORMAL)
                 self.calc_text.delete(1.0, tk.END)
