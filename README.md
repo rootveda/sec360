@@ -330,6 +330,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by Abhay**
 
 *Empowering developers to write secure code, one analysis at a time.*
