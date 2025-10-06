@@ -526,18 +526,29 @@ class LogViewer:
     def _load_detailed_flagged_items(self, session_id: str) -> List[Dict]:
         """Load detailed flagged items from detailed sessions"""
         try:
+            # Debug logging
+            print(f"DEBUG: Looking for detailed session file for session_id: {session_id}")
+            
             # Get project root directory
             project_root = Path(__file__).parent.parent.parent
             detailed_sessions_dir = project_root / "detailed_sessions"
             
+            print(f"DEBUG: Detailed sessions directory: {detailed_sessions_dir}")
+            
             if not detailed_sessions_dir.exists():
+                print("DEBUG: Detailed sessions directory does not exist")
                 return []
             
             # Look for detailed session file
             detailed_file = detailed_sessions_dir / f"{session_id}_detailed.json"
             
+            print(f"DEBUG: Looking for file: {detailed_file}")
+            
             if not detailed_file.exists():
+                print("DEBUG: Detailed session file does not exist")
                 return []
+            
+            print("DEBUG: Detailed session file found, loading...")
             
             with open(detailed_file, 'r', encoding='utf-8') as f:
                 session_data = json.load(f)
@@ -591,6 +602,7 @@ class LogViewer:
                 flagged_item['timestamp'] = session_data.get('analysis_timestamp', 'Unknown')
                 flagged_items.append(flagged_item)
             
+            print(f"DEBUG: Found {len(flagged_items)} flagged items")
             return flagged_items
             
         except Exception as e:
@@ -781,8 +793,17 @@ class LogViewer:
             total_risk_score += item.get('analysis_risk_score', 0)
             analysis_count += 1
         
-        # Get session metrics
+        # Get session metrics - try both locations
         final_metrics = session_data.get('final_analysis_metrics', {})
+        if not final_metrics:
+            # If final_analysis_metrics is empty, try reading from root level
+            final_metrics = {
+                'total_lines': session_data.get('code_length', 0),
+                'average_risk_score': session_data.get('risk_score', 0),
+                'risk_level': session_data.get('risk_level', 'Unknown'),
+                'total_analyses': session_data.get('current_analysis', {}).get('total_analyses', 0)
+            }
+        
         avg_risk_score = final_metrics.get('average_risk_score', 0)
         risk_level = final_metrics.get('risk_level', 'Unknown')
         total_lines = final_metrics.get('total_lines', 0)

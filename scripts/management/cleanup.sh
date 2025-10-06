@@ -42,6 +42,8 @@ fi
 print_status "Cleaning session files..."
 
 SESSION_DIR="core/logs/sessions"
+DETAILED_SESSIONS_DIR="detailed_sessions"
+
 if [ -d "$SESSION_DIR" ]; then
     # Count existing sessions
     SESSION_COUNT=$(find "$SESSION_DIR" -name "practice_*.json" | wc -l)
@@ -69,6 +71,25 @@ if [ -d "$SESSION_DIR" ]; then
 else
     print_status "Session directory doesn't exist (creating empty directory)"
     mkdir -p "$SESSION_DIR"
+fi
+
+# Clean up detailed sessions directory
+if [ -d "$DETAILED_SESSIONS_DIR" ]; then
+    DETAILED_COUNT=$(find "$DETAILED_SESSIONS_DIR" -name "*_detailed.json" | wc -l)
+    
+    if [ "$DETAILED_COUNT" -gt 0 ]; then
+        print_status "Found $DETAILED_COUNT detailed session files to clean"
+        
+        # Remove detailed session files
+        rm -f "$DETAILED_SESSIONS_DIR"/*_detailed.json
+        print_status "✅ Removed detailed session files"
+        
+    else
+        print_status "No detailed session files found to clean"
+    fi
+else
+    print_status "Detailed sessions directory doesn't exist (creating empty directory)"
+    mkdir -p "$DETAILED_SESSIONS_DIR"
 fi
 
 # Clean up log files
@@ -124,6 +145,7 @@ echo ""
 print_status "Summary:"
 echo "  • Stopped Sec360 processes"
 echo "  • Cleaned all session files"
+echo "  • Cleaned detailed session files"
 echo "  • Truncated log files"
 echo "  • Removed temporary files"
 echo "  • Cleaned Python cache"

@@ -207,6 +207,10 @@ class PracticeSessionManager:
     def end_session(self) -> bool:
         """End the current practice session"""
         try:
+            # Debug logging
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - end_session called for session: {self.session_id}\n")
+            
             if not self.session_active:
                 return False
             
@@ -235,7 +239,10 @@ class PracticeSessionManager:
             }
             
             # Save session data
-            self._save_session_data(session_data)
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - About to call _save_session_data for session: {self.session_id}\n")
+            
+            self._save_session_data(session_data, final_metrics)
             
             # Trigger scoreboard refresh
             self._trigger_scoreboard_refresh()
@@ -1072,9 +1079,13 @@ Be educational and helpful, not just critical."""
             "total_analyses": self.session_metrics['analysis_count']
         }
     
-    def _save_session_data(self, session_data: Dict) -> None:
+    def _save_session_data(self, session_data: Dict, final_metrics: Dict) -> None:
         """Save session data to JSON file"""
         try:
+            # Debug logging
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - _save_session_data called for session: {self.session_id}\n")
+            
             # Create sessions directory
             sessions_dir = "core/logs/sessions"
             os.makedirs(sessions_dir, exist_ok=True)
@@ -1089,23 +1100,42 @@ Be educational and helpful, not just critical."""
             print(f"Practice session data saved to: {filename}")
             
             # Also save detailed analysis data to separate file
-            self._save_analysis_details()
+            self._save_analysis_details(final_metrics)
             
         except Exception as e:
             print(f"Error saving practice session data: {e}")
+            
+            # Debug logging for error
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - ERROR in _save_session_data: {e}\n")
     
-    def _save_analysis_details(self) -> None:
+    def _save_analysis_details(self, final_metrics: Dict) -> None:
         """Save detailed analysis data to detailed_sessions folder for risk viewer"""
         try:
-            if not self.code_analyses:
+            # Debug logging
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - _save_analysis_details called for session: {self.session_id}\n")
+            
+            # Check if we have any analysis data (either from code_analyses or final_analysis_metrics)
+            has_code_analyses = bool(self.code_analyses)
+            has_final_metrics = bool(final_metrics)
+            
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - has_code_analyses: {has_code_analyses}, has_final_metrics: {has_final_metrics}\n")
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - final_metrics content: {final_metrics}\n")
+            
+            if not has_code_analyses and not has_final_metrics:
+                with open("debug_detailed_sessions.log", "a") as debug_file:
+                    debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - No analysis data available to save detailed session\n")
+                print("No analysis data available to save detailed session")
                 return  # No analyses to save
             
             # Create detailed_sessions directory (where risk viewer looks)
             detailed_sessions_dir = "detailed_sessions"
             os.makedirs(detailed_sessions_dir, exist_ok=True)
             
-            # Get final metrics for the session
-            final_metrics = self._calculate_final_metrics()
+            # Use the passed final_metrics directly
+            final_metrics_to_use = final_metrics
             
             # Create detailed session data in the format expected by risk viewer
             detailed_session = {
@@ -1115,46 +1145,53 @@ Be educational and helpful, not just critical."""
                 "session_end_time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.session_end_time)),
                 "session_duration": self.session_end_time - self.session_start_time,
                 "analysis_timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
-                "code_length": final_metrics.get('total_lines', 0),
-                "risk_score": final_metrics.get('average_risk_score', 0),
-                "risk_level": final_metrics.get('risk_level', 'UNKNOWN'),
-                "sensitive_fields": final_metrics.get('total_sensitive_fields', 0),
-                "sensitive_data": final_metrics.get('total_sensitive_data', 0),
-                "pii_count": final_metrics.get('total_pii', 0),
-                "medical_count": final_metrics.get('total_medical', 0),
-                "hepa_count": final_metrics.get('total_hepa', 0),
-                "api_security_count": final_metrics.get('total_compliance_api', 0),
+                "code_length": final_metrics_to_use.get('total_lines', 0),
+                "risk_score": final_metrics_to_use.get('average_risk_score', 0),
+                "risk_level": final_metrics_to_use.get('risk_level', 'UNKNOWN'),
+                "sensitive_fields": final_metrics_to_use.get('total_sensitive_fields', 0),
+                "sensitive_data": final_metrics_to_use.get('total_sensitive_data', 0),
+                "pii_count": final_metrics_to_use.get('total_pii', 0),
+                "medical_count": final_metrics_to_use.get('total_medical', 0),
+                "hepa_count": final_metrics_to_use.get('total_hepa', 0),
+                "api_security_count": final_metrics_to_use.get('total_compliance_api', 0),
                 "current_analysis": {
-                    "total_lines": final_metrics.get('total_lines', 0),
-                    "total_sensitive_fields": final_metrics.get('total_sensitive_fields', 0),
-                    "total_sensitive_data": final_metrics.get('total_sensitive_data', 0),
-                    "total_pii": final_metrics.get('total_pii', 0),
-                    "total_medical": final_metrics.get('total_medical', 0),
-                    "total_hepa": final_metrics.get('total_hepa', 0),
-                    "total_compliance_api": final_metrics.get('total_compliance_api', 0),
-                    "average_risk_score": final_metrics.get('average_risk_score', 0),
-                    "risk_level": final_metrics.get('risk_level', 'UNKNOWN'),
-                    "total_analyses": final_metrics.get('total_analyses', 0),
+                    "total_lines": final_metrics_to_use.get('total_lines', 0),
+                    "total_sensitive_fields": final_metrics_to_use.get('total_sensitive_fields', 0),
+                    "total_sensitive_data": final_metrics_to_use.get('total_sensitive_data', 0),
+                    "total_pii": final_metrics_to_use.get('total_pii', 0),
+                    "total_medical": final_metrics_to_use.get('total_medical', 0),
+                    "total_hepa": final_metrics_to_use.get('total_hepa', 0),
+                    "total_compliance_api": final_metrics_to_use.get('total_compliance_api', 0),
+                    "average_risk_score": final_metrics_to_use.get('average_risk_score', 0),
+                    "risk_level": final_metrics_to_use.get('risk_level', 'UNKNOWN'),
+                    "total_analyses": final_metrics_to_use.get('total_analyses', 0),
                     "sensitive_fields": {"items": []},
                     "sensitive_data": {"items": []},
                     "pii": {"items": []},
                     "medical": {"items": []},
                     "api_security": {"items": []}
                 },
-                "session_totals": final_metrics,
+                "session_totals": final_metrics_to_use,
                 "code_content": "",
                 "conversations": self.conversations.copy() if hasattr(self, 'conversations') else []
             }
             
-            # Extract code content from analyses
+            # Extract code content from analyses or conversations
             code_content = ""
-            if self.code_analyses:
+            if has_code_analyses and self.code_analyses:
                 code_content = self.code_analyses[0].get('code_snippet', '')
                 detailed_session["code_content"] = code_content
+            elif has_final_metrics and hasattr(self, 'conversations'):
+                # Extract code content from conversations if code_analyses is empty
+                for conv in self.conversations:
+                    if conv.get('message_type') == 'code_submission':
+                        code_content = conv.get('message', '')
+                        detailed_session["code_content"] = code_content
+                        break
             
             # Parse code content to extract sensitive items
             if code_content:
-                sensitive_items = self._parse_sensitive_items_from_code(code_content, final_metrics)
+                sensitive_items = self._parse_sensitive_items_from_code(code_content, final_metrics_to_use)
                 
                 # Update current_analysis with parsed items
                 detailed_session["current_analysis"]["sensitive_fields"]["items"] = sensitive_items.get('sensitive_fields', [])
@@ -1170,8 +1207,16 @@ Be educational and helpful, not just critical."""
             
             print(f"Detailed session data saved to: {detailed_filename}")
             
+            # Also write to debug log file
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - Detailed session saved: {detailed_filename}\n")
+            
         except Exception as e:
             print(f"Error saving detailed session data: {e}")
+            
+            # Also write error to debug log file
+            with open("debug_detailed_sessions.log", "a") as debug_file:
+                debug_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - ERROR saving detailed session: {e}\n")
     
     def _parse_sensitive_items_from_code(self, code_content: str, final_metrics: Dict) -> Dict:
         """Parse code content to extract sensitive items for detailed analysis"""

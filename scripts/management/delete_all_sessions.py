@@ -18,6 +18,7 @@ class SessionCleaner:
         # Get project root directory
         self.project_root = Path(__file__).parent.parent.parent
         self.sessions_dir = self.project_root / "core" / "logs" / "sessions"
+        self.detailed_sessions_dir = self.project_root / "detailed_sessions"
         self.active_sessions_file = self.project_root / "core" / "logs" / "sessions" / "active_sessions.json"
         
     def list_all_sessions(self):
@@ -70,6 +71,7 @@ class SessionCleaner:
         print(f"\n⚠️  WARNING: This will permanently delete {len(sessions)} practice session(s).")
         print("📋 This includes:")
         print("   • All session data and analysis results")
+        print("   • All detailed session files (for risk viewer)")
         print("   • User progress and statistics")
         print("   • Risk scores and token counts")
         print("   • Session logs and timestamps")
@@ -110,6 +112,38 @@ class SessionCleaner:
                 print(f"❌ Failed to delete {session['file']}: {e}")
         
         print(f"\n📊 Deletion Summary:")
+        print(f"   ✅ Successfully deleted: {deleted_count}")
+        print(f"   ❌ Failed to delete: {failed_count}")
+        
+        return deleted_count, failed_count
+    
+    def delete_detailed_sessions(self):
+        """Delete all detailed session files"""
+        print("\n🗑️  Deleting detailed session files...")
+        
+        if not self.detailed_sessions_dir.exists():
+            print("ℹ️  No detailed sessions directory found")
+            return 0, 0
+        
+        detailed_files = list(self.detailed_sessions_dir.glob("*_detailed.json"))
+        
+        if not detailed_files:
+            print("ℹ️  No detailed session files found")
+            return 0, 0
+        
+        deleted_count = 0
+        failed_count = 0
+        
+        for file_path in detailed_files:
+            try:
+                file_path.unlink()  # Delete the file
+                deleted_count += 1
+                print(f"✅ Deleted: {file_path.name}")
+            except Exception as e:
+                failed_count += 1
+                print(f"❌ Failed to delete {file_path.name}: {e}")
+        
+        print(f"\n📊 Detailed Sessions Deletion Summary:")
         print(f"   ✅ Successfully deleted: {deleted_count}")
         print(f"   ❌ Failed to delete: {failed_count}")
         
@@ -174,6 +208,9 @@ class SessionCleaner:
         # Delete sessions
         deleted_count, failed_count = self.delete_sessions(sessions)
         
+        # Delete detailed sessions
+        detailed_deleted_count, detailed_failed_count = self.delete_detailed_sessions()
+        
         # Clean up active sessions
         self.cleanup_active_sessions()
         
@@ -183,13 +220,15 @@ class SessionCleaner:
         # Final summary
         print(f"\n🎉 Session cleanup completed!")
         print(f"   📊 Sessions deleted: {deleted_count}")
+        print(f"   📊 Detailed sessions deleted: {detailed_deleted_count}")
         print(f"   🧹 Active sessions reset")
         print(f"   📝 Log files cleaned")
         
-        if failed_count > 0:
-            print(f"   ⚠️  {failed_count} file(s) could not be deleted")
+        total_failed = failed_count + detailed_failed_count
+        if total_failed > 0:
+            print(f"   ⚠️  {total_failed} file(s) could not be deleted")
         
-        print("\n✅ All practice sessions have been permanently removed.")
+        print("\n✅ All practice sessions and detailed sessions have been permanently removed.")
 
 def main():
     """Main function"""
