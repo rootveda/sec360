@@ -8,41 +8,56 @@
 ## 📸 **Application Screenshots**
 
 ### **🎯 Main Interface**
+
 ![Practice Session](Screenshots/Practice_Session.png)
-*Practice Session Tab - Real-time code analysis with AI Security Mentor*
+
+**Practice Session Tab** - Real-time code analysis with AI Security Mentor
 
 ![AI Analysis](Screenshots/AI_Analysis.png)
-*AI Analysis Output - Detailed risk assessment and recommendations*
+
+**AI Analysis Output** - Detailed risk assessment and recommendations
 
 ### **📊 Analysis & Monitoring**
+
 ![Risk Viewer](Screenshots/Risk_Viewer.png)
-*Risk Score Details Viewer - Comprehensive risk breakdown with calculations*
+
+**Risk Score Details Viewer** - Comprehensive risk breakdown with calculations
 
 ![Scoreboard](Screenshots/Scoreboard.png)
-*Live Scoreboard - Real-time user rankings and performance tracking*
+
+**Live Scoreboard** - Real-time user rankings and performance tracking
 
 ![Log Viewer](Screenshots/Log_Viewer.png)
-*Enhanced Log Viewer - Detailed session analysis and conversation history*
+
+**Enhanced Log Viewer** - Detailed session analysis and conversation history
 
 ### **📋 Session Management**
+
 ![Session Logs Tab](Screenshots/Session_Logs_Tab.png)
-*Session Logs Tab - Complete session history and analysis tracking*
+
+**Session Logs Tab** - Complete session history and analysis tracking
 
 ![Active Sessions Tab](Screenshots/Active_Sessions_Tab.png)
-*Active Sessions Tab - Real-time session monitoring and management*
+
+**Active Sessions Tab** - Real-time session monitoring and management
 
 ![Analysis History Tab](Screenshots/Analysis_History_Tab.png)
-*Analysis History Tab - Historical analysis data and trends*
+
+**Analysis History Tab** - Historical analysis data and trends
 
 ### **📈 Statistics & System**
+
 ![Stats Tab](Screenshots/Stats_Tab.png)
-*Statistics Tab - User performance metrics and improvement tracking*
+
+**Statistics Tab** - User performance metrics and improvement tracking
 
 ![System Status Tab](Screenshots/System_Status_Tab.png)
-*System Status Tab - Ollama service status and system health monitoring*
+
+**System Status Tab** - Ollama service status and system health monitoring
 
 ![Chat Tab](Screenshots/Chat_Tab.png)
-*Chat Interface - Interactive AI Security Mentor with stop functionality*
+
+**Chat Interface** - Interactive AI Security Mentor with stop functionality
 
 ---
 
