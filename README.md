@@ -7,6 +7,8 @@
 
 > **Sec360** is an advanced code security analysis platform that leverages AI-powered analysis to detect sensitive data exposure, security vulnerabilities, and compliance issues in your codebase. Built with Python and powered by Ollama's local LLM capabilities.
 
+> 💡 **Tip**: For the best experience, use **dark mode** on your system when running Sec360. The application's interface is optimized for dark themes and provides better visual contrast and reduced eye strain during extended coding sessions.
+
 ## 🎯 **Mission Statement**
 
 Sec360 empowers developers to identify and mitigate security risks in their code before they become vulnerabilities. By combining automated analysis with AI-powered insights, we help teams maintain secure coding practices and protect sensitive data.
