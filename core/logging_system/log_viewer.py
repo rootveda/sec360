@@ -66,7 +66,7 @@ class LogViewer:
         
         # Create treeview for logs
         columns = ('Timestamp', 'Flag Type', 'Content', 'Risk Score', 'Context')
-        self.log_tree = ttk.Treeview(logs_frame, columns=columns, show='headings', height=15)
+        self.log_tree = ttk.Treeview(logs_frame, columns=columns, show='headings', height=10)
         
         # Configure columns
         self.log_tree.heading('Timestamp', text='Timestamp')
@@ -99,7 +99,7 @@ class LogViewer:
         calc_frame.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
         
         # Risk calculation display (expanded)
-        self.calc_text = tk.Text(calc_frame, height=25, wrap=tk.WORD, font=('TkDefaultFont', 11, 'bold'),
+        self.calc_text = tk.Text(calc_frame, height=10, wrap=tk.WORD, font=('TkDefaultFont', 11, 'bold'),
                                 bg="#f8f9fa", fg="#000000", relief=tk.SUNKEN, bd=1)
         self.calc_text.pack(fill=tk.BOTH, expand=True, pady=(2, 0))
         
@@ -119,104 +119,49 @@ class LogViewer:
         footer_frame = ttk.LabelFrame(main_frame, text="Risk Categories & Levels Legend")
         footer_frame.pack(fill=tk.X, pady=(5, 0))
         
-        # Create legend content with increased height
-        legend_frame = ttk.Frame(footer_frame)
-        legend_frame.pack(fill=tk.X, padx=10, pady=15)  # Increased padding
+        # Create a simple text widget for the footer content
+        footer_text = tk.Text(footer_frame, height=8, wrap=tk.WORD, font=('TkDefaultFont', 10),
+                             bg="#f8f9fa", fg="#2c3e50", relief=tk.SUNKEN, bd=1)
+        footer_text.pack(fill=tk.X, padx=8, pady=8)
         
-        # Risk Categories section
-        categories_frame = ttk.Frame(legend_frame)
-        categories_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        # Transposed layout - each section side by side
+        footer_text.insert(tk.END, "Risk Categories: ", "header")
+        footer_text.insert(tk.END, "🔴 PII ", "pii")
+        footer_text.insert(tk.END, "🟢 Medical ", "medical")
+        footer_text.insert(tk.END, "🔵 HEPA ", "hepa")
+        footer_text.insert(tk.END, "🟠 API/Security\n", "api")
         
-        ttk.Label(categories_frame, text="Risk Categories:", font=('TkDefaultFont', 10, 'bold'), foreground="#2c3e50").pack(anchor=tk.W, pady=(0, 8))  # Light color font
+        footer_text.insert(tk.END, "Risk Score Details: ", "header")
+        footer_text.insert(tk.END, "🟢 LOW(0-29) ", "low")
+        footer_text.insert(tk.END, "🟡 MEDIUM(30-59) ", "medium")
+        footer_text.insert(tk.END, "🔴 HIGH(60-79) ", "high")
+        footer_text.insert(tk.END, "🚨 CRITICAL(80-100)\n", "critical")
         
-        categories_content = ttk.Frame(categories_frame)
-        categories_content.pack(fill=tk.X, pady=(5, 10))  # Increased padding
+        footer_text.insert(tk.END, "Risk Calculation Formula: ", "header")
+        footer_text.insert(tk.END, "Fields×5.0 ", "formula")
+        footer_text.insert(tk.END, "Data×8.0 ", "formula")
+        footer_text.insert(tk.END, "Medical(1.2x) ", "formula")
+        footer_text.insert(tk.END, "HEPA(1.1x) ", "formula")
+        footer_text.insert(tk.END, "PII(1.0x) ", "formula")
+        footer_text.insert(tk.END, "API(0.9x)\n", "formula")
         
-        # PII category
-        pii_frame = ttk.Frame(categories_content)
-        pii_frame.pack(side=tk.LEFT, padx=(0, 20))  # Increased spacing
-        pii_label = tk.Label(pii_frame, text="🔴 PII", bg="#ffe6e6", fg="#cc0000", font=('TkDefaultFont', 9), padx=5, pady=2)  # Increased font and padding
-        pii_label.pack(side=tk.LEFT)
-        ttk.Label(pii_frame, text="Personal Information", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.LEFT, padx=(5, 0))  # Light color font
+        footer_text.insert(tk.END, "Line Factor: ", "header")
+        footer_text.insert(tk.END, "min(1.0, max(0.1, lines/100))", "formula")
         
-        # Medical category
-        medical_frame = ttk.Frame(categories_content)
-        medical_frame.pack(side=tk.LEFT, padx=(0, 20))  # Increased spacing
-        medical_label = tk.Label(medical_frame, text="🟢 Medical", bg="#e6ffe6", fg="#006600", font=('TkDefaultFont', 9), padx=5, pady=2)  # Increased font and padding
-        medical_label.pack(side=tk.LEFT)
-        ttk.Label(medical_frame, text="HIPAA Data", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.LEFT, padx=(5, 0))  # Light color font
+        # Configure text tags for color coding with larger fonts for better readability
+        footer_text.tag_configure("header", foreground="#2c3e50", font=('TkDefaultFont', 12, 'bold'))
+        footer_text.tag_configure("pii", foreground="#cc0000", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("medical", foreground="#006600", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("hepa", foreground="#003366", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("api", foreground="#cc6600", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("low", foreground="#006600", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("medium", foreground="#b8860b", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("high", foreground="#cc0000", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("critical", foreground="#990000", font=('TkDefaultFont', 11, 'bold'))
+        footer_text.tag_configure("formula", foreground="#34495e", font=('TkDefaultFont', 11))
         
-        # HEPA category
-        hepa_frame = ttk.Frame(categories_content)
-        hepa_frame.pack(side=tk.LEFT, padx=(0, 20))  # Increased spacing
-        hepa_label = tk.Label(hepa_frame, text="🔵 HEPA", bg="#e6f3ff", fg="#003366", font=('TkDefaultFont', 9), padx=5, pady=2)  # Increased font and padding
-        hepa_label.pack(side=tk.LEFT)
-        ttk.Label(hepa_frame, text="Healthcare Data", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.LEFT, padx=(5, 0))  # Light color font
+        footer_text.config(state=tk.DISABLED)
         
-        # API/Security category
-        api_frame = ttk.Frame(categories_content)
-        api_frame.pack(side=tk.LEFT, padx=(0, 20))  # Increased spacing
-        api_label = tk.Label(api_frame, text="🟠 API/Security", bg="#fff0e6", fg="#cc6600", font=('TkDefaultFont', 9), padx=5, pady=2)  # Increased font and padding
-        api_label.pack(side=tk.LEFT)
-        ttk.Label(api_frame, text="Credentials & Keys", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.LEFT, padx=(5, 0))  # Light color font
-        
-        # Risk Levels section
-        levels_frame = ttk.Frame(legend_frame)
-        levels_frame.pack(side=tk.RIGHT, fill=tk.X, expand=True)
-        
-        ttk.Label(levels_frame, text="Risk Levels:", font=('TkDefaultFont', 10, 'bold'), foreground="#2c3e50").pack(anchor=tk.E, pady=(0, 8))  # Light color font
-        
-        levels_content = ttk.Frame(levels_frame)
-        levels_content.pack(fill=tk.X, pady=(5, 10))  # Increased padding
-        
-        # Low risk
-        low_frame = ttk.Frame(levels_content)
-        low_frame.pack(side=tk.RIGHT, padx=(8, 0))  # Increased spacing
-        ttk.Label(low_frame, text="Low (0-29)", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.RIGHT)  # Light color font
-        low_label = tk.Label(low_frame, text="🟢", bg="#e6ffe6", fg="#006600", font=('TkDefaultFont', 9), padx=3, pady=2)  # Increased font and padding
-        low_label.pack(side=tk.RIGHT, padx=(3, 0))  # Increased padding
-        
-        # Medium risk
-        medium_frame = ttk.Frame(levels_content)
-        medium_frame.pack(side=tk.RIGHT, padx=(8, 0))  # Increased spacing
-        ttk.Label(medium_frame, text="Medium (30-59)", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.RIGHT)  # Light color font
-        medium_label = tk.Label(medium_frame, text="🟡", bg="#fff8dc", fg="#b8860b", font=('TkDefaultFont', 9), padx=3, pady=2)  # Increased font and padding
-        medium_label.pack(side=tk.RIGHT, padx=(3, 0))  # Increased padding
-        
-        # High risk
-        high_frame = ttk.Frame(levels_content)
-        high_frame.pack(side=tk.RIGHT, padx=(8, 0))  # Increased spacing
-        ttk.Label(high_frame, text="High (60-79)", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.RIGHT)  # Light color font
-        high_label = tk.Label(high_frame, text="🔴", bg="#ffe6e6", fg="#cc0000", font=('TkDefaultFont', 9), padx=3, pady=2)  # Increased font and padding
-        high_label.pack(side=tk.RIGHT, padx=(3, 0))  # Increased padding
-        
-        # Critical risk
-        critical_frame = ttk.Frame(levels_content)
-        critical_frame.pack(side=tk.RIGHT, padx=(8, 0))  # Increased spacing
-        ttk.Label(critical_frame, text="Critical (80-100)", font=('TkDefaultFont', 9), foreground="#34495e").pack(side=tk.RIGHT)  # Light color font
-        critical_label = tk.Label(critical_frame, text="🚨", bg="#ffcccc", fg="#990000", font=('TkDefaultFont', 9), padx=3, pady=2)  # Increased font and padding
-        critical_label.pack(side=tk.RIGHT, padx=(3, 0))  # Increased padding
-        
-        # Risk Calculation Summary section (new addition)
-        summary_frame = ttk.Frame(footer_frame)
-        summary_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
-        
-        ttk.Label(summary_frame, text="Risk Calculation Formula:", font=('TkDefaultFont', 10, 'bold'), foreground="#2c3e50").pack(anchor=tk.W, pady=(5, 2))
-        
-        formula_frame = ttk.Frame(summary_frame)
-        formula_frame.pack(fill=tk.X)
-        
-        ttk.Label(formula_frame, text="• Fields: Count × 5.0 points", font=('TkDefaultFont', 9), foreground="#34495e").pack(anchor=tk.W)
-        ttk.Label(formula_frame, text="• Data: Count × 8.0 points", font=('TkDefaultFont', 9), foreground="#34495e").pack(anchor=tk.W)
-        ttk.Label(formula_frame, text="• Categories: Medical (1.2x), HEPA (1.1x), PII (1.0x), API (0.9x)", font=('TkDefaultFont', 9), foreground="#34495e").pack(anchor=tk.W)
-        ttk.Label(formula_frame, text="• Line Factor: min(1.0, max(0.1, lines/100))", font=('TkDefaultFont', 9), foreground="#34495e").pack(anchor=tk.W)
-        
-        # Session Statistics section (moved to footer)
-        stats_frame = ttk.LabelFrame(main_frame, text="Session Statistics")
-        stats_frame.pack(fill=tk.X, pady=(5, 0))
-        
-        self.stats_text = tk.Text(stats_frame, height=6, wrap=tk.WORD)
-        self.stats_text.pack(fill=tk.X, padx=5, pady=5)
     
     def load_sessions(self):
         """Load all available sessions from detailed_sessions folder"""
@@ -893,53 +838,6 @@ class LogViewer:
         
         session_data = self.session_data[self.current_session]
         
-        # Build statistics from session data
-        stats_text = ""
-        
-        # Basic session stats
-        stats_text += f"📊 Session Statistics:\n"
-        stats_text += f"Duration: {session_data.get('session_duration', 0):.1f} seconds\n"
-        stats_text += f"Messages: {session_data.get('message_count', 0)}\n"
-        stats_text += f"Tokens: {session_data.get('token_count', 0)}\n\n"
-        
-        # Analysis statistics
-        if 'final_analysis_metrics' in session_data:
-            metrics = session_data['final_analysis_metrics']
-            stats_text += f"🔍 Analysis Metrics:\n"
-            stats_text += f"Total Analyses: {metrics.get('total_analyses', 0)}\n"
-            stats_text += f"Lines Analyzed: {metrics.get('total_lines', 0)}\n"
-            stats_text += f"Sensitive Fields: {metrics.get('total_sensitive_fields', 0)}\n"
-            stats_text += f"Sensitive Data: {metrics.get('total_sensitive_data', 0)}\n"
-            stats_text += f"PII Count: {metrics.get('total_pii', 0)}\n"
-            stats_text += f"Medical Count: {metrics.get('total_medical', 0)}\n"
-            stats_text += f"API/Security Count: {metrics.get('total_compliance_api', 0)}\n"
-            stats_text += f"Average Risk Score: {metrics.get('average_risk_score', 0):.1f}/100\n"
-            stats_text += f"Risk Level: {metrics.get('risk_level', 'Unknown')}\n\n"
-            
-            # Calculate score based on risk
-            risk_score = metrics.get('average_risk_score', 0)
-            if risk_score >= 80:
-                score = 20
-                score_desc = "Critical Risk"
-            elif risk_score >= 60:
-                score = 40
-                score_desc = "High Risk"
-            elif risk_score >= 40:
-                score = 60
-                score_desc = "Medium Risk"
-            elif risk_score >= 20:
-                score = 80
-                score_desc = "Low Risk"
-            else:
-                score = 100
-                score_desc = "Minimal Risk"
-            
-            stats_text += f"🎯 Security Score: {score}/100 ({score_desc})\n"
-        else:
-            stats_text += "No analysis metrics available\n"
-        
-        self.stats_text.delete(1.0, tk.END)
-        self.stats_text.insert(tk.END, stats_text)
     
     def clear_session_display(self):
         """Clear all session display areas when no session is selected"""
@@ -953,10 +851,6 @@ class LogViewer:
             for item in self.log_tree.get_children():
                 self.log_tree.delete(item)
         
-        # Clear stats text
-        if hasattr(self, 'stats_text'):
-            self.stats_text.delete(1.0, tk.END)
-            self.stats_text.insert(tk.END, "No session selected. Select a session to view statistics.")
     
     def on_log_double_click(self, event):
         """Handle double-click on log entry"""
