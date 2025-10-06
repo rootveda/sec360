@@ -339,6 +339,10 @@ class DetailedLogViewer:
                 f"{risk_score}"
             ), tags=['pii'])
         
+        # Force treeview refresh
+        self.breakdown_tree.update()
+        self.root.update()
+        
         # Add Medical items
         medical_items = current_analysis.get('medical', {}).get('items', [])
         for medical in medical_items:
