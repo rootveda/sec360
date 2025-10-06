@@ -25,10 +25,11 @@
 - `scripts/setup/configure_shell.sh` - Shell configuration
 
 **📚 Documentation**
-- `README.md` - Comprehensive project overview
-- `HOW_TO_RUN.md` - Detailed setup instructions
-- `FEATURES_AND_FUNCTIONALITY.md` - Feature documentation
+- `README.md` - Comprehensive project overview with screenshots
+- `HOW_TO_RUN.md` - Detailed setup instructions with visual guides
+- `FEATURES_AND_FUNCTIONALITY.md` - Feature documentation with screenshots
 - `docs/` - Additional documentation
+- `Screenshots/` - Complete application interface screenshots
 
 **🧪 Sample Data**
 - `data/samples/` - Sample code files for testing
@@ -116,9 +117,10 @@ sec360/
 ├── 📁 cleaned_sample_code/    # Cleaned sample files
 ├── 📁 docs/                   # Documentation
 ├── 📁 ui/                     # User interface components
+├── 📁 Screenshots/            # Application interface screenshots
 ├── 📄 sec360.py              # Main application entry point
-├── 📄 README.md              # Project documentation
-├── 📄 HOW_TO_RUN.md          # Setup instructions
+├── 📄 README.md              # Project documentation with screenshots
+├── 📄 HOW_TO_RUN.md          # Setup instructions with visual guides
 └── 📄 requirements.txt       # Python dependencies
 ```
 
