@@ -9,7 +9,7 @@
 
 ### **🎯 Main Interface**
 
-![Sample Code](Screenshots/Sample_Code.png)
+![Sample Code Analysis](Screenshots/Sample_Code.png)
 
 **Practice Session Tab** - Real-time code analysis with AI Security Mentor
 
