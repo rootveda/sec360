@@ -22,6 +22,8 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 - **Stop button functionality** to interrupt AI responses
 - **Session timer** with auto-timeout (5 minutes default)
 - **User session management** (one active session per user)
+- **Automatic detailed session creation** for comprehensive analysis
+- **Enhanced risk viewer** with field/data breakdown and calculations
 
 ### 📊 **Analysis Engine**
 - **Lines of Code** tracking and analysis
@@ -47,6 +49,8 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 - **Ollama integration** with model management
 - **Session logging** and audit trails
 - **Configuration management**
+- **Enhanced log viewers** with detailed risk breakdowns
+- **Automatic session cleanup** and maintenance
 
 ## 🚀 **Quick Start**
 
@@ -288,6 +292,21 @@ python3 tests/test_table_parser.py
 - **Encrypted Sessions**: Session data is encrypted
 - **Audit Logging**: Complete analysis history
 - **Access Control**: User-based session management
+
+## 🆕 **Recent Updates**
+
+### **v2.1.0 - Enhanced Analysis & Risk Viewer**
+- ✅ **Automatic detailed session creation** - Sessions now automatically generate comprehensive analysis files
+- ✅ **Enhanced risk viewer** - Complete breakdown of field/data calculations with multipliers
+- ✅ **Improved session management** - Better handling of session end scenarios
+- ✅ **Enhanced debugging** - Comprehensive logging for troubleshooting
+- ✅ **Cross-platform compatibility** - All features work seamlessly across macOS, Windows, and Linux
+
+### **Key Improvements**
+- **Risk Score Details Viewer**: Now displays accurate field counts, data points, and calculation breakdowns
+- **Category Breakdown**: Shows PII, Medical, HEPA, and API/Security data with individual multipliers
+- **Session Persistence**: Enhanced session file creation for both regular and detailed analysis
+- **Management Scripts**: Updated cleanup and deletion scripts to handle new file structures
 
 ## 📈 **Roadmap**
 
