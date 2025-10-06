@@ -138,7 +138,7 @@ class LogViewer:
         footer_text.insert(tk.END, "🚨 CRITICAL(80-100)\n", "critical")
         
         footer_text.insert(tk.END, "Risk Calculation Formula: ", "header")
-        footer_text.insert(tk.END, "Fields×0.1 ", "formula")
+        footer_text.insert(tk.END, "Fields×5.0 ", "formula")
         footer_text.insert(tk.END, "Data×8.0 ", "formula")
         footer_text.insert(tk.END, "Medical(1.2x) ", "formula")
         footer_text.insert(tk.END, "HEPA(1.1x) ", "formula")
@@ -576,7 +576,7 @@ class LogViewer:
             
             # Base score by type
             if item_type == 'sensitive_field':
-                base_score = 0.1
+                base_score = 5.0
             elif item_type == 'sensitive_data':
                 base_score = 8.0
             else:
@@ -598,7 +598,7 @@ class LogViewer:
             
         except Exception as e:
             print(f"Error calculating item risk score: {e}")
-            return 0.1
+            return 5.0
     
     def update_risk_calculation(self):
         """Update the risk calculation display for the selected session"""
@@ -667,8 +667,8 @@ class LogViewer:
             self.calc_text.insert(tk.END, "🧮 Risk Calculation Breakdown:\n", "category")
             
             # Field risk calculation
-            field_risk = min(60, total_fields * 0.1)
-            self.calc_text.insert(tk.END, f"• Field Risk: min(60, {total_fields} × 0.1) = {field_risk}\n", "calculation")
+            field_risk = min(60, total_fields * 5.0)
+            self.calc_text.insert(tk.END, f"• Field Risk: min(60, {total_fields} × 5.0) = {field_risk}\n", "calculation")
             
             # Data risk calculation
             data_risk = min(60, total_data * 8.0)
