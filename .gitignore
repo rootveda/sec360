@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+core/logs/sessions/*.json
+core/logs/sessions/active_sessions.json
+
+# Session data (keep structure but exclude actual session files)
+core/logs/sessions/practice_*.json
+core/logs/sessions/session_*.json
+
+# Detailed sessions (keep structure but exclude actual session files)
+detailed_sessions/*_detailed.json
+
+# Temporary files
+*.tmp
+*.temp
+test_*.py
+debug_*.py
+temp_*.py
+
+# Configuration files with sensitive data
+config.json
+core/mac_silicon_config.json
+core/monitor_config.json
+core/scoring_config.json
+
+# PID files
+*.pid
+
+# Test outputs
+test_output/
+debug_output/

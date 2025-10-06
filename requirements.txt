@@ -1,0 +1,132 @@
+# Sec360 by Abhay - Python Dependencies
+# Complete dependency list for smooth start.sh script execution
+# Compatible with Python 3.8+ (including Python 13+)
+
+# =============================================================================
+# PYTHON VERSION REQUIREMENTS
+# =============================================================================
+# Minimum Python Version: 3.8
+# Maximum Python Version: No limit (tested up to Python 13+)
+# Supported Commands: python3, python (auto-detected by start.sh)
+# =============================================================================
+
+# HTTP Client for Ollama API communication
+requests>=2.31.0
+
+# System monitoring and process management
+psutil>=5.9.0
+
+# =============================================================================
+# GUI FRAMEWORK (Built into Python standard library)
+# =============================================================================
+
+# tkinter - GUI framework (built into Python standard library)
+# Note: On some Linux distributions, you may need:
+# Ubuntu/Debian: sudo apt-get install python3-tk
+# CentOS/RHEL: sudo yum install tkinter
+# Fedora: sudo dnf install python3-tkinter
+
+# =============================================================================
+# OPTIONAL PERFORMANCE DEPENDENCIES (Mac Silicon optimized)
+# =============================================================================
+
+# Numerical computing (Mac Silicon optimized)
+numpy>=1.24.0; platform_machine == "arm64" and python_version >= "3.8"
+
+# Scientific computing (Mac Silicon optimized)
+scipy>=1.10.0; platform_machine == "arm64" and python_version >= "3.8" and python_version < "3.13"
+
+# =============================================================================
+# DEVELOPMENT DEPENDENCIES (Optional)
+# =============================================================================
+
+# Testing framework
+# pytest>=7.0.0; extra == "dev"
+
+# Code coverage
+# pytest-cov>=4.0.0; extra == "dev"
+
+# Code formatting
+# black>=22.0.0; extra == "dev"
+
+# Linting
+# flake8>=5.0.0; extra == "dev"
+
+# =============================================================================
+# SYSTEM DEPENDENCIES (Not Python packages - must be installed separately)
+# =============================================================================
+
+# The following system tools are required for start.sh script:
+# 
+# macOS:
+# - curl (built-in)
+# - git (install via Xcode Command Line Tools: xcode-select --install)
+# - Homebrew (installed automatically by start.sh)
+# 
+# Windows:
+# - curl (built into Windows 10+)
+# - git (install Git for Windows)
+# - Chocolatey (optional, installed automatically by start.sh)
+# - PowerShell (built-in)
+# 
+# Linux:
+# - curl (install: sudo apt install curl)
+# - git (install: sudo apt install git)
+# - Package manager (apt/dnf/yum/zypper - depends on distribution)
+# 
+# All platforms:
+# - Python 3.11+ (required)
+# - Ollama (installed automatically by start.sh)
+
+# =============================================================================
+# PYTHON STANDARD LIBRARY MODULES (Built-in, no installation needed)
+# =============================================================================
+
+# The following modules are used by Sec360 but are built into Python:
+# - json (JSON processing)
+# - os (Operating system interface)
+# - sys (System-specific parameters)
+# - time (Time-related functions)
+# - datetime (Date and time handling)
+# - threading (Thread-based parallelism)
+# - subprocess (Subprocess management)
+# - pathlib (Object-oriented filesystem paths)
+# - re (Regular expression operations)
+# - logging (Logging facility)
+# - hashlib (Secure hash and message digest algorithms)
+# - platform (Access to underlying platform data)
+# - queue (Synchronized queue class)
+# - math (Mathematical functions)
+# - dataclasses (Data classes)
+# - enum (Support for enumerations)
+# - collections (Specialized container datatypes)
+# - typing (Type hints)
+# - traceback (Print or retrieve a stack traceback)
+# - webbrowser (Convenient web-browser controller)
+
+# =============================================================================
+# INSTALLATION NOTES
+# =============================================================================
+
+# To install all dependencies:
+# pip install -r requirements.txt
+# 
+# To install with development dependencies:
+# pip install -r requirements.txt[dev]
+# 
+# Platform-specific installation notes:
+# 
+# macOS:
+# - All dependencies work out of the box
+# - Mac Silicon optimization automatically applied
+# 
+# Windows:
+# - May need to install tkinter separately: pip install tk
+# - Ensure Python 3.11+ is installed
+# 
+# Linux:
+# - Install system dependencies first:
+#   Ubuntu/Debian: sudo apt-get install python3-tk python3-dev curl git
+#   CentOS/RHEL: sudo yum install python3-tkinter python3-devel curl git
+#   Fedora: sudo dnf install python3-tkinter python3-devel curl git
+# - Then install Python dependencies: pip install -r requirements.txt
