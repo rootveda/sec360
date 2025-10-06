@@ -76,3 +76,6 @@ core/scoring_config.json
 # Test outputs
 test_output/
 debug_output/
+
+# Local documentation (not needed in repository)
+UPLOAD_GUIDE.md
