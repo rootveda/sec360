@@ -60,9 +60,13 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 **Practice Session Tab** - Real-time code analysis with AI Security Mentor
 
+---
+
 ![AI Analysis](Screenshots/AI_Analysis.png)
 
 **AI Analysis Output** - Detailed risk assessment and recommendations
+
+---
 
 ### **📊 Analysis & Monitoring**
 
@@ -70,13 +74,19 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 **Risk Score Details Viewer** - Comprehensive risk breakdown with calculations
 
+---
+
 ![Scoreboard](Screenshots/Scoreboard.png)
 
 **Live Scoreboard** - Real-time user rankings and performance tracking
 
+---
+
 ![Log Viewer](Screenshots/Log_Viewer.png)
 
 **Enhanced Log Viewer** - Detailed session analysis and conversation history
+
+---
 
 ### **📋 Session Management**
 
@@ -84,13 +94,19 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 **Session Logs Tab** - Complete session history and analysis tracking
 
+---
+
 ![Active Sessions Tab](Screenshots/Active_Sessions_Tab.png)
 
 **Active Sessions Tab** - Real-time session monitoring and management
 
+---
+
 ![Analysis History Tab](Screenshots/Analysis_History_Tab.png)
 
 **Analysis History Tab** - Historical analysis data and trends
+
+---
 
 ### **📈 Statistics & System**
 
@@ -98,9 +114,13 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 **Statistics Tab** - User performance metrics and improvement tracking
 
+---
+
 ![System Status Tab](Screenshots/System_Status_Tab.png)
 
 **System Status Tab** - Ollama service status and system health monitoring
+
+---
 
 ![Chat Tab](Screenshots/Chat_Tab.png)
 
