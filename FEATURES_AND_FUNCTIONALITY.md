@@ -16,6 +16,8 @@
 - **Stop button functionality** to interrupt AI responses
 - **Session timer** with auto-timeout (5 minutes default)
 - **User session management** (one active session per user)
+- **Automatic detailed session creation** for comprehensive analysis
+- **Enhanced risk viewer** with field/data breakdown and calculations
 
 ### **2. 📊 Analysis Engine**
 - **Lines of Code** tracking and analysis
@@ -81,6 +83,8 @@
    - Detailed analysis logs
    - Export capabilities for reports
    - Search and filter functionality
+   - Risk Score Details viewer
+   - Enhanced Log Viewer with conversations
 
 4. **📊 Statistics Tab**
    - User performance tracking
@@ -141,9 +145,11 @@
 - **Leaderboard functionality**
 
 #### **6. Logging System (`core/logging_system/`)**
-- **`log_viewer.py`**: Log viewing and management
+- **`log_viewer.py`**: Risk Score Details viewer with calculation breakdown
+- **`detailed_log_viewer.py`**: Enhanced log viewer with conversations
 - **Session log storage**
 - **Analysis history tracking**
+- **Automatic detailed session file creation**
 
 #### **7. Scoreboard (`core/scoreboard/`)**
 - **`scoreboard_viewer.py`**: Performance tracking UI
@@ -171,6 +177,7 @@
 
 ### **3. Cleanup Script (`scripts/management/cleanup.sh`)**
 - **Session file cleanup**
+- **Detailed session file cleanup**
 - **Process termination**
 - **Log management**
 
@@ -453,4 +460,21 @@
 
 **Sec360 by Abhay** - Empowering developers with AI-powered security analysis and secure coding practices.
 
-*Last Updated: October 2024*
+## 🆕 **Recent Updates**
+
+### **v2.1.0 - Enhanced Analysis & Risk Viewer**
+- ✅ **Automatic detailed session creation** - Sessions now automatically generate comprehensive analysis files
+- ✅ **Enhanced risk viewer** - Complete breakdown of field/data calculations with multipliers
+- ✅ **Improved session management** - Better handling of session end scenarios
+- ✅ **Enhanced debugging** - Comprehensive logging for troubleshooting
+- ✅ **Cross-platform compatibility** - All features work seamlessly across macOS, Windows, and Linux
+
+### **Key Improvements**
+- **Risk Score Details Viewer**: Now displays accurate field counts, data points, and calculation breakdowns
+- **Category Breakdown**: Shows PII, Medical, HEPA, and API/Security data with individual multipliers
+- **Session Persistence**: Enhanced session file creation for both regular and detailed analysis
+- **Management Scripts**: Updated cleanup and deletion scripts to handle new file structures
+
+---
+
+*Last Updated: October 2025*

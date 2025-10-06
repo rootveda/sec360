@@ -247,6 +247,8 @@ sec360/
 - **Duplicate detection** to track analysis patterns
 - **Session persistence** with automatic resume capability
 - **Stop button functionality** to interrupt AI responses
+- **Automatic detailed session creation** for comprehensive analysis
+- **Enhanced risk viewer** with field/data breakdown and calculations
 
 ### **2. 📊 Analysis Engine**
 - **Lines of Code** tracking and analysis
@@ -277,6 +279,8 @@ sec360/
 - **Session history** and analysis tracking
 - **Export capabilities** for reports
 - **Search and filter** functionality
+- **Automatic detailed session file creation**
+- **Enhanced log viewers** with risk breakdowns
 
 ---
 
@@ -591,6 +595,24 @@ cd sec360
 
 ---
 
-*Last Updated: October 2024*
+## 🆕 **Recent Updates**
+
+### **v2.1.0 - Enhanced Analysis & Risk Viewer**
+- ✅ **Automatic detailed session creation** - Sessions now automatically generate comprehensive analysis files
+- ✅ **Enhanced risk viewer** - Complete breakdown of field/data calculations with multipliers
+- ✅ **Improved session management** - Better handling of session end scenarios
+- ✅ **Enhanced debugging** - Comprehensive logging for troubleshooting
+- ✅ **Cross-platform compatibility** - All features work seamlessly across macOS, Windows, and Linux
+
+### **Key Improvements**
+- **Risk Score Details Viewer**: Now displays accurate field counts, data points, and calculation breakdowns
+- **Category Breakdown**: Shows PII, Medical, HEPA, and API/Security data with individual multipliers
+- **Session Persistence**: Enhanced session file creation for both regular and detailed analysis
+- **Management Scripts**: Updated cleanup and deletion scripts to handle new file structures
+
+---
+
+*Last Updated: October 2025*
 *Cross-Platform Support: macOS, Windows, Linux*
 *Automated Setup: One-command installation and startup*
+*Enhanced Features: Automatic detailed session creation and risk viewer*

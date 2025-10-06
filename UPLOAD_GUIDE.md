@@ -6,14 +6,16 @@
 
 ### ✅ What's Included:
 
-**📁 Core Application (62 files, 16,737 lines)**
+**📁 Core Application (65+ files, 18,000+ lines)**
 - Complete Python codebase with all features
 - Cross-platform support (macOS, Linux, Windows)
 - AI-powered code analysis with Ollama integration
 - Practice session management with conversation tracking
 - Risk scoring system with detailed breakdown
 - Scoreboard viewer with live updates
-- Enhanced log viewers (Risk Viewer & Detailed Log Viewer)
+- Enhanced log viewers (Risk Score Details & Detailed Log Viewer)
+- Automatic detailed session creation
+- Enhanced debugging and troubleshooting
 
 **🔧 Management Scripts**
 - `scripts/management/start.sh` - Cross-platform startup
@@ -56,15 +58,17 @@
    - Cross-platform compatibility
 
 5. **Enhanced Log Viewers**
-   - Risk Viewer: Detailed risk calculations and flagged content
+   - Risk Score Details Viewer: Detailed risk calculations and flagged content
    - Detailed Log Viewer: Conversation history and analysis breakdown
    - Color-coded UI with improved readability
+   - Automatic detailed session file creation
 
 6. **Cross-Platform Support**
    - macOS: Homebrew integration
    - Linux: Multiple package managers (apt, dnf, pacman, zypper)
    - Windows: Chocolatey and Winget support
    - Automatic dependency management
+   - Enhanced debugging capabilities
 
 ## 🚀 Upload Steps
 
