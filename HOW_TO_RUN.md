@@ -155,7 +155,7 @@ ollama pull llama3.2:3b
 
 ![Sample Code Analysis](Screenshots/Sample_Code.png)
 
-**Practice Session Tab** - Real-time code analysis with AI Security Mentor
+**Sample Code Analysis** - Real-time code analysis with AI Security Mentor
 
 ---
 

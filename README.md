@@ -58,7 +58,7 @@ Sec360 empowers developers to identify and mitigate security risks in their code
 
 ![Sample Code Analysis](Screenshots/Sample_Code.png)
 
-**Practice Session Tab** - Real-time code analysis with AI Security Mentor
+**Sample Code Analysis** - Real-time code analysis with AI Security Mentor
 
 ---
 
