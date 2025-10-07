@@ -791,7 +791,7 @@ Ready to start? Feel free to ask me questions or share code for analysis!"""
         if not sample_name:
             return
         
-        # Map sample names to files
+        # Map sample names to files (always resolve absolute repo path)
         sample_files = {
             "API Keys and Tokens": "api_keys_sample.py",
             "Personal Identifiable Information (PII)": "pii_sample.py",
@@ -802,8 +802,15 @@ Ready to start? Feel free to ask me questions or share code for analysis!"""
         
         filename = sample_files.get(sample_name)
         if filename:
-            filepath = os.path.join("data", "samples", filename)
             try:
+                from pathlib import Path
+                project_root = Path(__file__).resolve().parents[1]
+                filepath = str(project_root / "data" / "samples" / filename)
+            except Exception:
+                filepath = os.path.join("data", "samples", filename)
+            try:
+                # Debug print for troubleshooting path issues
+                print(f"Loading sample from: {filepath}")
                 with open(filepath, 'r') as f:
                     content = f.read()
                 

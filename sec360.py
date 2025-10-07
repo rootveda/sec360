@@ -747,14 +747,16 @@ Choose your log viewer:
     
     def _get_risk_level(self, risk_score: int) -> str:
         """Get human-readable risk level"""
-        if risk_score < 30:
-            return "MINIMAL"
-        elif risk_score < 60:
-            return "MEDIUM"
-        elif risk_score < 80:
-            return "HIGH"
-        else:
+        if risk_score >= 101:
             return "CRITICAL"
+        elif risk_score >= 100:
+            return "HIGH"
+        elif risk_score >= 80:
+            return "MEDIUM"
+        elif risk_score >= 20:
+            return "LOW"
+        else:
+            return "MINIMAL"
     
     def _reset_analysis_ui(self):
         """Reset analysis UI to ready state"""
@@ -1206,12 +1208,20 @@ Last Updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     def show_sample_code(self, event=None):
         """Show sample code based on dropdown selection"""
         # Map dropdown options to file paths
+        # Always resolve absolute path from project root
+        try:
+            from pathlib import Path
+            project_root = Path(__file__).resolve().parent
+            data_samples = project_root / "data" / "samples"
+        except Exception:
+            data_samples = None
+
         file_mapping = {
-            "API Keys and Tokens": "data/samples/api_keys_sample.py",
-            "Personal Identifiable Information (PII)": "data/samples/pii_sample.py",
-            "Medical Records and Health Information": "data/samples/medical_records_sample.py",
-            "Internal Infrastructure and Hostnames": "data/samples/internal_infrastructure_sample.py",
-            "Compliance and Regulatory Data": "data/samples/compliance_sample.py"
+            "API Keys and Tokens": str((data_samples / "api_keys_sample.py") if data_samples else "data/samples/api_keys_sample.py"),
+            "Personal Identifiable Information (PII)": str((data_samples / "pii_sample.py") if data_samples else "data/samples/pii_sample.py"),
+            "Medical Records and Health Information": str((data_samples / "medical_records_sample.py") if data_samples else "data/samples/medical_records_sample.py"),
+            "Internal Infrastructure and Hostnames": str((data_samples / "internal_infrastructure_sample.py") if data_samples else "data/samples/internal_infrastructure_sample.py"),
+            "Compliance and Regulatory Data": str((data_samples / "compliance_sample.py") if data_samples else "data/samples/compliance_sample.py")
         }
         
         # Get selected option from dropdown
@@ -1222,6 +1232,7 @@ Last Updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             return
         
         filename = file_mapping[selected_option]
+        print(f"Loading sample from: {filename}")
         
         # Check if file exists
         if not os.path.exists(filename):

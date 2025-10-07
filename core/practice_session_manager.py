@@ -963,7 +963,7 @@ Be educational and helpful, not just critical."""
         compliance_api = analysis_data.get('compliance_api', 0)
         risk_score = analysis_data.get('risk_score', 0)
         
-        # Determine risk level
+        # Determine risk level (aligned with RiskCalculator thresholds)
         if risk_score >= 101:
             risk_level = "CRITICAL"
         elif risk_score >= 100:
@@ -1008,11 +1008,14 @@ Be educational and helpful, not just critical."""
 
 """
         
-        if risk_score >= 80:
+        # Banner strictly follows calculated risk_level, not session averages
+        if risk_level == "CRITICAL":
+            summary += "🚨 CRITICAL RISK detected. Immediate action required."
+        elif risk_level == "HIGH":
             summary += "🚨 HIGH RISK detected! Please review and address security issues."
-        elif risk_score >= 60:
+        elif risk_level == "MEDIUM":
             summary += "⚠️ MEDIUM RISK detected. Consider security improvements."
-        elif risk_score >= 30:
+        elif risk_level == "LOW":
             summary += "🟢 LOW RISK detected. Good security practices observed."
         else:
             summary += "✅ MINIMAL RISK. Excellent security practices!"
