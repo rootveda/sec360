@@ -30,9 +30,9 @@ class RiskCalculator:
         # Risk thresholds (adjusted for target results)
         self.thresholds = {
             'minimal': 0,
-            'low': 40,
+            'low': 60,
             'medium': 70,  # Move MEDIUM threshold up to make 84 become MEDIUM
-            'high': 90,  # Make 100 become HIGH
+            'high': 80,  # Make 100 become HIGH
             'critical': 101  # Only 101+ becomes CRITICAL
         }
     

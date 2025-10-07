@@ -1013,11 +1013,6 @@ Be educational and helpful, not just critical."""
             
         summary += "\n"
         
-        # AI security suggestions
-        suggestions = self._generate_secure_coding_suggestions(analysis_data)
-        if suggestions:
-            summary += suggestions
-        
         return summary
     
     def _update_session_metrics(self, analysis_data: Dict) -> None:

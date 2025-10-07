@@ -695,11 +695,11 @@ class LogViewer:
 
             # Determine risk level using the same logic as RiskCalculator
             # This avoids importing the whole class for one method
-            if avg_risk_score >= 90:
+            if avg_risk_score >= 80:
                 level, recommendation, priority = "CRITICAL", "Immediate action required", "Critical security review needed"
             elif avg_risk_score >= 70:
                 level, recommendation, priority = "HIGH", "Address security issues urgently", "High"
-            elif avg_risk_score >= 40:
+            elif avg_risk_score >= 60:
                 level, recommendation, priority = "MEDIUM", "Address security issues", "Review and remediate"
             else:
                 level, recommendation, priority = "LOW", "Monitor and improve", "Good security practices"
