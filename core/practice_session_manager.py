@@ -885,6 +885,13 @@ Be educational and helpful, not just critical."""
         else:
             actual_analysis_data = raw_result
         
+        # Post-process the analysis to correct for AI errors (like counting empty strings)
+        code_snippet = self.main_app.practice_manager.code_input.get("1.0", "end-1c") # Get code from UI
+        corrected_analysis_data = self._correct_ai_analysis(code_snippet, actual_analysis_data)
+        
+        # Always use the corrected analysis data for all subsequent operations
+        actual_analysis_data = corrected_analysis_data
+
         # Update session metrics with new analysis data
         self._update_session_metrics(actual_analysis_data)
         
@@ -1534,3 +1541,50 @@ Let's start with secure coding practices!"""
         ended_count += remaining_count
         
         return ended_count
+
+    def _correct_ai_analysis(self, code_content: str, analysis_data: dict) -> dict:
+        """
+        Corrects AI analysis by verifying sensitive data instances against the code.
+        If a flagged field has an empty string or None, it's not counted as data.
+        """
+        import re
+        corrected_data = analysis_data.copy()
+        initial_data_count = corrected_data.get("sensitive_data", 0)
+        
+        # If the AI reported no data, there's nothing to correct
+        if initial_data_count == 0:
+            return corrected_data
+
+        data_points_to_remove = 0
+        flagged_items = corrected_data.get("analysis_details", {}).get("flagged_items", [])
+
+        # Get a set of all field names that the AI flagged
+        flagged_field_names = {item.get("name") for item in flagged_items if item.get("type") == "sensitive_field" and item.get("name")}
+
+        for field_name in flagged_field_names:
+            # Regex to find assignments like: field_name = "", field_name="", "field_name": "" etc.
+            pattern = re.compile(
+                rf"""
+                (?:["']?{re.escape(field_name)}["']?\s*[:=]\s*) # Field name, optional quotes, colon or equals
+                (?:"\s*"|'\s*'|None)                             # An empty string "" or '' or the word None
+                """, re.VERBOSE
+            )
+
+            if pattern.search(code_content):
+                # This field is present in the code with an empty value.
+                # We assume the AI might have incorrectly paired this field with a data point.
+                data_points_to_remove += 1
+        
+        # Correct the main sensitive_data count
+        # We cap the removal at the number of data points the AI reported.
+        corrected_data_count = max(0, initial_data_count - data_points_to_remove)
+        corrected_data["sensitive_data"] = corrected_data_count
+
+        # If we've zeroed out the data, we must also zero out the category counts
+        if corrected_data["sensitive_data"] == 0:
+            corrected_data["pii_count"] = 0
+            corrected_data["medical_count"] = 0
+            corrected_data["hepa_count"] = 0
+            corrected_data["compliance_api_count"] = 0
+            
+        return corrected_data
