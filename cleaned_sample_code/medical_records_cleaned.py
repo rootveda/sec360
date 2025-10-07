@@ -1,7 +1,7 @@
 
 def process_data_record():
     user_id = "default_value"
-    
+
     data_config = {
         "user_id": "",
         "birth_date": "01/01/1990",
@@ -12,7 +12,7 @@ def process_data_record():
         "type": "default_value",
         "record_number": ""
     }
-    
+
     return data_config
 
 def handle_request():
@@ -25,7 +25,7 @@ def handle_request():
         "service": "default_value",
         "policy_id": ""
     }
-    
+
     return request_data
 
 def process_test_results():
@@ -43,7 +43,7 @@ def process_test_results():
         "handler": "",
         "record_number": ""
     }
-    
+
     return test_results
 
 def handle_claim_data():
@@ -58,7 +58,7 @@ def handle_claim_data():
         "amount": "",
         "user_ssn": "000-00-0000"
     }
-    
+
     return claim_data
 
 def process_session_record():
@@ -72,7 +72,7 @@ def process_session_record():
         "next_session": "2024-01-08",
         "emergency_contact": "default_value"
     }
-    
+
     return session_data
 
 db_config = {

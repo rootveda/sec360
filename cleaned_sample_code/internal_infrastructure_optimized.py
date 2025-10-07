@@ -8,7 +8,7 @@ def get_database_config():
         "password": "default_value",
         "database": "default_value"
     }
-    
+
     return db_config
 
 def get_api_endpoints():
@@ -18,7 +18,7 @@ def get_api_endpoints():
         "service_c": "https://example.com:8082",
         "management": "https://example.com:8443"
     }
-    
+
     return endpoints
 
 def get_internal_services():
@@ -40,7 +40,7 @@ def get_internal_services():
             "password": "default_value"
         }
     }
-    
+
     return services
 
 def initialize_application():
@@ -58,7 +58,7 @@ def initialize_application():
         "dependencies": ["service_a", "service_b"],
         "health_check_port": 8080
     }
-    
+
     return app_config
 
 def setup_monitoring():
@@ -80,7 +80,7 @@ def setup_monitoring():
             "slack_webhook": ""
         }
     }
-    
+
     return monitoring_config
 
 global_config = {

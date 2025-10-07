@@ -11,7 +11,7 @@ def handle_standard_data():
         "last_visit": "2024-01-01",
         "next_appointment": "2024-02-01"
     }
-    
+
     return data_config
 
 def handle_user_data():
@@ -26,7 +26,7 @@ def handle_user_data():
         "data_controller": "TestCompany",
         "contact": "contact@testcompany.com"
     }
-    
+
     return user_data
 
 def handle_payment_data():
@@ -40,7 +40,7 @@ def handle_payment_data():
         "merchant_id": "MERCH-000000",
         "terminal_id": "TERM-000000"
     }
-    
+
     return payment_data
 
 def handle_sox_data():
@@ -57,7 +57,7 @@ def handle_sox_data():
         "audit_date": "2024-01-01",
         "compliance_status": "compliant"
     }
-    
+
     return sox_data
 
 def handle_coppa_data():
@@ -71,7 +71,7 @@ def handle_coppa_data():
         "data_collected": ["name", "age", "favorite_color"],
         "data_retention_period": "30_days"
     }
-    
+
     return coppa_data
 
 def validate_compliance():
@@ -95,7 +95,7 @@ def validate_compliance():
             "regular_testing": True
         }
     }
-    
+
     return compliance_rules
 
 config_settings = {

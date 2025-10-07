@@ -11,7 +11,7 @@ def handle_standard_data():
         "last_visit": "2024-01-01",
         "next_appointment": "2024-02-01"
     }
-    
+
     return data_config
 
 def handle_user_data():
@@ -26,7 +26,7 @@ def handle_user_data():
         "data_controller": "default_value",
         "contact": "default_value"
     }
-    
+
     return user_data
 
 def handle_payment_data():
@@ -40,7 +40,7 @@ def handle_payment_data():
         "merchant_id": "",
         "terminal_id": ""
     }
-    
+
     return payment_data
 
 def validate_compliance():
@@ -58,7 +58,7 @@ def validate_compliance():
             "feature_4": True
         }
     }
-    
+
     return compliance_rules
 
 app_config = {

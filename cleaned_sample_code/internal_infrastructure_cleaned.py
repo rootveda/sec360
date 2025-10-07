@@ -8,7 +8,7 @@ def get_database_config():
         "password": "config_password",
         "database": "general_db"
     }
-    
+
     return db_config
 
 def get_api_endpoints():
@@ -18,7 +18,7 @@ def get_api_endpoints():
         "service_c": "https://api-c.example.com:8082",
         "management_panel": "https://management.example.com:8443"
     }
-    
+
     return endpoints
 
 def get_internal_services():
@@ -44,7 +44,7 @@ def get_internal_services():
             "password": "msg_config"
         }
     }
-    
+
     return services
 
 def get_env_configuration():
@@ -57,7 +57,7 @@ def get_env_configuration():
         "s3_bucket": "qf-bucket-data",
         "logs_path": "/var/log/quality/"
     }
-    
+
     return quality_env
 
 def initialize_application():
@@ -75,7 +75,7 @@ def initialize_application():
         "dependencies": ["service_a", "service_b", "service_c"],
         "health_check_port": 8080
     }
-    
+
     return app_config
 
 def setup_monitoring():
@@ -97,7 +97,7 @@ def setup_monitoring():
             "slack_webhook": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXX"
         }
     }
-    
+
     return monitoring_config
 
 def deploy_application():
@@ -120,7 +120,7 @@ def deploy_application():
             "log_path": "/var/log/sample-app"
         }
     }
-    
+
     return deployment_config
 
 global_config = {
