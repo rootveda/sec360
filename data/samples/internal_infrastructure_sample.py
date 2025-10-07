@@ -1,8 +1,5 @@
-# Sample Code File 4: Internal Infrastructure and Hostnames
-# This file contains internal infrastructure data that should NOT be shared with AI tools
 
 def get_database_config():
-    # Internal database configuration
     db_config = {
         "hostname": "db-prod-01.internal.corp",
         "internal_ip": "192.168.1.100",
@@ -15,7 +12,6 @@ def get_database_config():
     return db_config
 
 def get_api_endpoints():
-    # Internal API endpoints
     endpoints = {
         "user_service": "https://user-api.internal.corp:8080",
         "payment_service": "https://payment-api.internal.corp:8081",
@@ -26,7 +22,6 @@ def get_api_endpoints():
     return endpoints
 
 def get_internal_services():
-    # Internal service configuration
     services = {
         "redis": {
             "host": "redis-cluster.internal.corp",
@@ -53,7 +48,6 @@ def get_internal_services():
     return services
 
 def get_vpn_config():
-    # VPN configuration
     vpn_config = {
         "server": "vpn.internal.corp",
         "port": 1194,
@@ -67,7 +61,6 @@ def get_vpn_config():
     return vpn_config
 
 def get_session_config():
-    # Session management configuration
     session_config = {
         "session_secret": "session_secret_key_xyz789",
         "session_timeout": 3600,
@@ -79,7 +72,6 @@ def get_session_config():
     return session_config
 
 def get_monitoring_config():
-    # Internal monitoring configuration
     monitoring = {
         "prometheus": {
             "host": "prometheus.internal.corp",
@@ -102,7 +94,6 @@ def get_monitoring_config():
     return monitoring
 
 def get_ldap_config():
-    # LDAP configuration
     ldap_config = {
         "server": "ldap.internal.corp",
         "port": 389,
@@ -114,7 +105,6 @@ def get_ldap_config():
     
     return ldap_config
 
-# Internal network configuration
 network_config = {
     "subnets": [
         "192.168.1.0/24",
@@ -134,7 +124,6 @@ network_config = {
     ]
 }
 
-# Deployment configuration
 deployment_config = {
     "kubernetes": {
         "api_server": "https://k8s-api.internal.corp:6443",

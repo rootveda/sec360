@@ -1,11 +1,7 @@
-# Sample Code File 3: Medical Records and Health Information
-# This file contains medical data that should NOT be shared with AI tools
 
 def process_medical_record():
-    # Patient information
     patient_id = "PAT-123456"
     
-    # Medical history
     medical_data = {
         "patient_id": "PAT-123456",
         "date_of_birth": "01/15/1985",
@@ -79,7 +75,6 @@ def process_mental_health_record():
     
     return mental_health_data
 
-# Medical database configuration
 medical_db_config = {
     "database": {
         "host": "medical-db.internal.corp",
@@ -93,9 +88,7 @@ medical_db_config = {
     "audit_logging": True
 }
 
-# Patient lookup function
 def find_patient_by_ssn(ssn):
-    # This function should not be shared as it contains SSN lookup logic
     patients = {
         "123-45-6789": "John Doe",
         "987-65-4321": "Jane Smith",

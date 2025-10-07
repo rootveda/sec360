@@ -1,5 +1,3 @@
-# Sample Code File 5: Data Protection (Optimized)
-# This file contains sanitized data protection configuration for secure testing
 
 def handle_standard_data():
     data_config = {
@@ -63,7 +61,6 @@ def validate_compliance():
     
     return compliance_rules
 
-# Configuration settings
 app_config = {
     "database": {
         "host": "example.com",

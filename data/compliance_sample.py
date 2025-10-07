@@ -1,8 +1,5 @@
-# Sample Code File 5: Data Protection
-# This file contains data protection information that should NOT be shared with AI tools
 
 def handle_hipaa_data():
-    # HIPAA protected health information
     phi_data = {
         "patient_name": "John Doe",
         "patient_id": "PAT-123456",
@@ -18,7 +15,6 @@ def handle_hipaa_data():
     return phi_data
 
 def handle_gdpr_data():
-    # GDPR personal data
     gdpr_data = {
         "data_subject": "Jane Smith",
         "email": "jane.smith@example.com",
@@ -34,7 +30,6 @@ def handle_gdpr_data():
     return gdpr_data
 
 def handle_pci_data():
-    # PCI DSS payment card data
     pci_data = {
         "cardholder_name": "Robert Johnson",
         "card_number": "4532-1234-5678-9012",
@@ -49,7 +44,6 @@ def handle_pci_data():
     return pci_data
 
 def handle_sox_data():
-    # SOX financial data
     sox_data = {
         "company_name": "Public Company Inc",
         "fiscal_year": "2024",
@@ -66,7 +60,6 @@ def handle_sox_data():
     return sox_data
 
 def handle_ferpa_data():
-    # FERPA educational records
     ferpa_data = {
         "student_name": "Sarah Wilson",
         "student_id": "STU-147258",
@@ -87,7 +80,6 @@ def handle_ferpa_data():
     return ferpa_data
 
 def handle_ccpa_data():
-    # CCPA consumer data
     ccpa_data = {
         "consumer_name": "Michael Brown",
         "email": "michael.brown@example.com",
@@ -104,7 +96,6 @@ def handle_ccpa_data():
     return ccpa_data
 
 def handle_review_data():
-    # Review and assessment data
     review_data = {
         "review_id": "REV-2024-001",
         "reviewer": "Internal Review Team",
@@ -127,7 +118,6 @@ def handle_review_data():
     return review_data
 
 def handle_regulatory_data():
-    # General regulatory data
     regulatory_data = {
         "regulation": "GDPR Article 32",
         "requirement": "Security of processing",
@@ -144,7 +134,6 @@ def handle_regulatory_data():
     
     return regulatory_data
 
-# Compliance configuration
 compliance_config = {
     "pci_dss": {
         "enabled": True,

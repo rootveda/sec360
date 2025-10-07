@@ -1,8 +1,5 @@
-# Sample Code File 5: Data Protection (Cleaned)
-# This file contains sanitized data protection configuration for secure testing
 
 def handle_standard_data():
-    # General data configuration
     data_config = {
         "user_name": "TestUser",
         "user_id": "USER-001",
@@ -18,7 +15,6 @@ def handle_standard_data():
     return data_config
 
 def handle_user_data():
-    # User data configuration
     user_data = {
         "data_subject": "TestSubject",
         "email": "test.user@example.com",
@@ -34,7 +30,6 @@ def handle_user_data():
     return user_data
 
 def handle_payment_data():
-    # Payment data configuration
     payment_data = {
         "cardholder_name": "TestHolder",
         "card_number": "0000-0000-0000-0000",
@@ -49,7 +44,6 @@ def handle_payment_data():
     return payment_data
 
 def handle_sox_data():
-    # SOX compliance data configuration
     sox_data = {
         "company_name": "TestCorp",
         "fiscal_year": "2024",
@@ -67,7 +61,6 @@ def handle_sox_data():
     return sox_data
 
 def handle_coppa_data():
-    # COPPA data configuration
     coppa_data = {
         "child_name": "TestChild",
         "age": 12,
@@ -82,7 +75,6 @@ def handle_coppa_data():
     return coppa_data
 
 def validate_compliance():
-    # Compliance validation logic
     compliance_rules = {
         "hipaa": {
             "encryption_required": True,
@@ -106,7 +98,6 @@ def validate_compliance():
     
     return compliance_rules
 
-# Configuration settings
 config_settings = {
     "database": {
         "host": "secure-db.internal.corp",

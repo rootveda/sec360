@@ -1,5 +1,3 @@
-# Sample Code File 4: Internal Infrastructure (Optimized)
-# This file contains sanitized infrastructure configuration for secure testing
 
 def get_database_config():
     db_config = {
@@ -85,7 +83,6 @@ def setup_monitoring():
     
     return monitoring_config
 
-# Global configuration
 global_config = {
     "application_settings": {
         "name": "default_value",

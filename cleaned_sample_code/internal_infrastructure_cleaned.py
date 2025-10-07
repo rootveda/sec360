@@ -1,8 +1,5 @@
-# Sample Code File 4: Internal Infrastructure and Hostnames (Cleaned)
-# This file contains sanitized infrastructure configuration for secure testing
 
 def get_database_config():
-    # Database configuration
     db_config = {
         "hostname": "database.example.com",
         "internal_ip": "192.168.1.100",
@@ -15,7 +12,6 @@ def get_database_config():
     return db_config
 
 def get_api_endpoints():
-    # API endpoints configuration
     endpoints = {
         "service_a": "https://api-a.example.com:8080",
         "service_b": "https://api-b.example.com:8081",
@@ -26,7 +22,6 @@ def get_api_endpoints():
     return endpoints
 
 def get_internal_services():
-    # Service configuration
     services = {
         "cache_service": {
             "host": "cache-cluster.example.com",
@@ -53,7 +48,6 @@ def get_internal_services():
     return services
 
 def get_env_configuration():
-    # Quality environment configuration
     quality_env = {
         "environment": "quality",
         "database_url": "postgresql://qfuser:qfpassword@qfdb.example.com:5432/qfdatabase",
@@ -67,7 +61,6 @@ def get_env_configuration():
     return quality_env
 
 def initialize_application():
-    # Application initialization configuration
     app_config = {
         "name": "sample_application",
         "version": "1.0.0",
@@ -86,7 +79,6 @@ def initialize_application():
     return app_config
 
 def setup_monitoring():
-    # Monitoring configuration
     monitoring_config = {
         "prometheus": {
             "host": "prometheus.example.com",
@@ -109,7 +101,6 @@ def setup_monitoring():
     return monitoring_config
 
 def deploy_application():
-    # Deployment configuration
     deployment_config = {
         "kubernetes": {
             "namespace": "sample-app",
@@ -132,7 +123,6 @@ def deploy_application():
     
     return deployment_config
 
-# Global configuration
 global_config = {
     "application_settings": {
         "name": "sample_application",

@@ -1,11 +1,7 @@
-# Sample Code File 3: Medical Records and Health Information (Cleaned)
-# This file contains sanitized medical configuration for secure testing
 
 def process_data_record():
-    # User information
     user_id = "default_value"
     
-    # Data configuration
     data_config = {
         "user_id": "",
         "birth_date": "01/01/1990",
@@ -79,7 +75,6 @@ def process_session_record():
     
     return session_data
 
-# Database configuration
 db_config = {
     "database": {
         "host": "database.internal.corp",
@@ -93,9 +88,7 @@ db_config = {
     "audit_logging": True
 }
 
-# User lookup function
 def find_user_by_id(user_id):
-    # This function provides safe user lookup
     users = {
         "USER-001": "TestUser One",
         "USER-002": "TestUser Two",
