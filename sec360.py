@@ -767,44 +767,25 @@ Choose your log viewer:
     def load_sample_code(self):
         """Load sample code from the textbox into Practice tab"""
         try:
-            # Get content from sample textbox
-            sample_content = self.sample_display.get(1.0, tk.END)
+            # Get the full content from the sample display widget
+            code_content = self.sample_display.get("1.0", tk.END).strip()
             
-            # Extract the actual code content (between markers)
-            if "--- CODE CONTENT ---" in sample_content:
-                code_start = sample_content.find("--- CODE CONTENT ---") + len("--- CODE CONTENT ---")
-                code_end = sample_content.find("--- END CODE ---")
-                
-                if code_start != -1 and code_end != -1:
-                    code_content = sample_content[code_start:code_end].strip()
-                else:
-                    messagebox.showwarning("Warning", "No valid code content found. Please select a sample first.")
-                    return
-            else:
+            if not code_content or code_content.startswith("Instructions for Sample Code:"):
                 messagebox.showwarning("Warning", "No sample code loaded. Please select from dropdown first.")
                 return
             
-            # Clear and populate the practice message input first
-            try:
-                # Try to find the practice message entry
-                if hasattr(self, 'practice_message_entry'):
-                    self.practice_message_entry.delete(1.0, tk.END)
-                    self.practice_message_entry.insert(tk.END, code_content)
-                    
-                    # Switch to Practice tab FIRST, then show popup
-                    self.notebook.select(0)  # Practice Session is tab 0 (Sec360 Analysis is disabled)
-                    
-                    # Use root.after to show popup after tab switch
-                    self.root.after(100, lambda: messagebox.showinfo("Success", "Edited code loaded to Practice Session chat!"))
-                else:
-                    # Fallback if practice_message_entry not found
-                    self.notebook.select(0)
-                    self.root.after(100, lambda: messagebox.showinfo("Success", "Edited code loaded to Practice Session chat!"))
-                    
-            except AttributeError as e:
-                self.notebook.select(0)
-                self.root.after(100, lambda: messagebox.showinfo("Success", "Code loaded! Switching to Practice Session tab..."))
-            
+            # Check if practice message entry exists
+            if hasattr(self, 'practice_message_entry'):
+                self.practice_message_entry.delete("1.0", tk.END)
+                self.practice_message_entry.insert("1.0", code_content)
+                
+                # Switch to the practice tab
+                self.notebook.select(self.practice_frame)
+                
+                self.root.after(100, lambda: messagebox.showinfo("Success", "Code loaded into Practice Session tab."))
+            else:
+                messagebox.showerror("Error", "Practice session input area not found.")
+                
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load sample code: {str(e)}")
     
@@ -1207,21 +1188,17 @@ Last Updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     
     def show_sample_code(self, event=None):
         """Show sample code based on dropdown selection"""
-        # Map dropdown options to file paths
         # Always resolve absolute path from project root
-        try:
-            from pathlib import Path
-            project_root = Path(__file__).resolve().parent
-            data_samples = project_root / "data" / "samples"
-        except Exception:
-            data_samples = None
+        from pathlib import Path
+        project_root = Path(__file__).resolve().parent
+        data_samples_dir = project_root / "data" / "samples"
 
         file_mapping = {
-            "API Keys and Tokens": str((data_samples / "api_keys_sample.py") if data_samples else "data/samples/api_keys_sample.py"),
-            "Personal Identifiable Information (PII)": str((data_samples / "pii_sample.py") if data_samples else "data/samples/pii_sample.py"),
-            "Medical Records and Health Information": str((data_samples / "medical_records_sample.py") if data_samples else "data/samples/medical_records_sample.py"),
-            "Internal Infrastructure and Hostnames": str((data_samples / "internal_infrastructure_sample.py") if data_samples else "data/samples/internal_infrastructure_sample.py"),
-            "Compliance and Regulatory Data": str((data_samples / "compliance_sample.py") if data_samples else "data/samples/compliance_sample.py")
+            "API Keys and Tokens": str(data_samples_dir / "api_keys_sample.py"),
+            "Personal Identifiable Information (PII)": str(data_samples_dir / "pii_sample.py"),
+            "Medical Records and Health Information": str(data_samples_dir / "medical_records_sample.py"),
+            "Internal Infrastructure and Hostnames": str(data_samples_dir / "internal_infrastructure_sample.py"),
+            "Compliance and Regulatory Data": str(data_samples_dir / "compliance_sample.py")
         }
         
         # Get selected option from dropdown
@@ -1243,27 +1220,17 @@ Last Updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             with open(filename, 'r', encoding='utf-8') as f:
                 code_content = f.read()
             
-            # Clear the text box and display the code
-            self.sample_display.delete(1.0, tk.END)
-            self.sample_display.insert(tk.END, f"""
-INSTRUCTIONS:
-1. Review this sample code and identify potential data leaks
-2. EDIT the code to remove sensitive information (API keys, PII, etc.)  
-3. Click "Load Sample" when ready
+            self.sample_display.config(state=tk.NORMAL)
+            self.sample_display.delete("1.0", tk.END)
 
-SELECTED SAMPLE: {selected_option}
-FILE: {filename}
+            # Just show the code content, nothing else
+            self.sample_display.insert("1.0", code_content)
 
---- CODE CONTENT ---
-{code_content}
---- END CODE ---
-
-Ready to edit? Make changes above, then click "Load Sample" to copy to Practice tab.
-""")
-            
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load file: {str(e)}")
-    
+            self.sample_display.config(state=tk.NORMAL)
+            self.sample_display.delete("1.0", tk.END)
+            self.sample_display.insert("1.0", f"Error loading sample file: {e}")
+            
     def open_log_viewer(self):
         """Open log viewer"""
         try:

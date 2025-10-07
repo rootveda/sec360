@@ -30,9 +30,9 @@ class RiskCalculator:
         # Risk thresholds (adjusted for target results)
         self.thresholds = {
             'minimal': 0,
-            'low': 20,
-            'medium': 80,  # Move MEDIUM threshold up to make 84 become MEDIUM
-            'high': 100,  # Make 100 become HIGH
+            'low': 40,
+            'medium': 70,  # Move MEDIUM threshold up to make 84 become MEDIUM
+            'high': 90,  # Make 100 become HIGH
             'critical': 101  # Only 101+ becomes CRITICAL
         }
     
@@ -101,17 +101,15 @@ class RiskCalculator:
         return min(25, category_score)  # Cap category contribution
     
     def _determine_risk_level(self, risk_score: int) -> str:
-        """Determine risk level based on score"""
-        if risk_score >= self.thresholds['critical']:
-            return 'critical'
-        elif risk_score >= self.thresholds['high']:
-            return 'high'
+        """Get human-readable risk level based on thresholds"""
+        if risk_score >= self.thresholds['high']:
+            return "CRITICAL"
         elif risk_score >= self.thresholds['medium']:
-            return 'medium'
+            return "HIGH"
         elif risk_score >= self.thresholds['low']:
-            return 'low'
+            return "MEDIUM"
         else:
-            return 'minimal'
+            return "LOW"
     
     def _calculate_confidence(self, analysis_data: Dict) -> float:
         """Calculate confidence in risk assessment"""
@@ -178,28 +176,28 @@ class RiskCalculator:
         """Generate recommendations based on risk analysis"""
         recommendations = []
         
-        if risk_level == 'critical':
+        if risk_level == 'CRITICAL':
             recommendations.extend([
                 "🚨 IMMEDIATE ACTION REQUIRED: Critical security vulnerabilities detected",
                 "Review and remove all hardcoded sensitive data",
                 "Implement proper secrets management",
                 "Consider code review and security audit"
             ])
-        elif risk_level == 'high':
+        elif risk_level == 'HIGH':
             recommendations.extend([
                 "🔴 HIGH PRIORITY: Significant security risks detected",
                 "Replace hardcoded credentials with environment variables",
                 "Implement proper data classification",
                 "Review data handling practices"
             ])
-        elif risk_level == 'medium':
+        elif risk_level == 'MEDIUM':
             recommendations.extend([
                 "🟡 MEDIUM RISK: Some security concerns identified",
                 "Review sensitive data handling",
                 "Consider input validation improvements",
                 "Update security documentation"
             ])
-        elif risk_level == 'low':
+        elif risk_level == 'LOW':
             recommendations.extend([
                 "🟢 LOW RISK: Minor security improvements needed",
                 "Continue following security best practices",
@@ -252,7 +250,7 @@ class RiskCalculator:
             'improvement_recommendations': self._get_comparison_recommendations(risk1, risk2)
         }
         
-        return compar
+        return comparison
     
     def _get_comparison_recommendations(self, risk1: Dict, risk2: Dict) -> List[str]:
         """Get recommendations based on risk comparison"""

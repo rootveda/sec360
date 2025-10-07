@@ -692,26 +692,21 @@ class LogViewer:
             
             # Risk level analysis (aligned with RiskCalculator thresholds)
             self.calc_text.insert(tk.END, "🎯 Risk Level Analysis:\n", "category")
-            if avg_risk_score >= 101:
-                self.calc_text.insert(tk.END, f"• Risk Level: CRITICAL ({risk_level.upper()})\n", "score")
-                self.calc_text.insert(tk.END, f"• Recommendation: Immediate action required\n", "items")
-                self.calc_text.insert(tk.END, f"• Priority: Critical security review needed\n", "items")
-            elif avg_risk_score >= 100:
-                self.calc_text.insert(tk.END, f"• Risk Level: HIGH ({risk_level.upper()})\n", "score")
-                self.calc_text.insert(tk.END, f"• Recommendation: Address security issues urgently\n", "items")
-                self.calc_text.insert(tk.END, f"• Priority: High\n", "items")
-            elif avg_risk_score >= 80:
-                self.calc_text.insert(tk.END, f"• Risk Level: MEDIUM ({risk_level.upper()})\n", "score")
-                self.calc_text.insert(tk.END, f"• Recommendation: Address security issues\n", "items")
-                self.calc_text.insert(tk.END, f"• Priority: Review and remediate\n", "items")
-            elif avg_risk_score >= 20:
-                self.calc_text.insert(tk.END, f"• Risk Level: LOW ({risk_level.upper()})\n", "score")
-                self.calc_text.insert(tk.END, f"• Recommendation: Monitor and improve\n", "items")
-                self.calc_text.insert(tk.END, f"• Priority: Good security practices\n", "items")
+
+            # Determine risk level using the same logic as RiskCalculator
+            # This avoids importing the whole class for one method
+            if avg_risk_score >= 90:
+                level, recommendation, priority = "CRITICAL", "Immediate action required", "Critical security review needed"
+            elif avg_risk_score >= 70:
+                level, recommendation, priority = "HIGH", "Address security issues urgently", "High"
+            elif avg_risk_score >= 40:
+                level, recommendation, priority = "MEDIUM", "Address security issues", "Review and remediate"
             else:
-                self.calc_text.insert(tk.END, f"• Risk Level: MINIMAL ({risk_level.upper()})\n", "score")
-                self.calc_text.insert(tk.END, f"• Recommendation: Excellent security\n", "items")
-                self.calc_text.insert(tk.END, f"• Priority: Maintain current practices\n", "items")
+                level, recommendation, priority = "LOW", "Monitor and improve", "Good security practices"
+
+            self.calc_text.insert(tk.END, f"• Risk Level: {level} ({risk_level.upper()})\n", "score")
+            self.calc_text.insert(tk.END, f"• Recommendation: {recommendation}\n", "items")
+            self.calc_text.insert(tk.END, f"• Priority: {priority}\n", "items")
             
             self.calc_text.insert(tk.END, f"\n💡 Note: For detailed field names and data values, use the Enhanced Log Viewer.", "items")
         else:

@@ -963,22 +963,13 @@ Be educational and helpful, not just critical."""
         compliance_api = analysis_data.get('compliance_api', 0)
         risk_score = analysis_data.get('risk_score', 0)
         
-        # Determine risk level (aligned with RiskCalculator thresholds)
-        if risk_score >= 101:
-            risk_level = "CRITICAL"
-        elif risk_score >= 100:
-            risk_level = "HIGH"
-        elif risk_score >= 80:
-            risk_level = "MEDIUM"
-        elif risk_score >= 20:
-            risk_level = "LOW"
-        else:
-            risk_level = "MINIMAL"
+        # Determine risk level using RiskCalculator's thresholds
+        risk_level = self.main_app.risk_calculator._determine_risk_level(risk_score)
         
         # Get session totals
         session_totals = self._get_session_totals()
         avg_risk_score = self._get_average_risk_score()
-        avg_risk_level = self._get_risk_level(avg_risk_score)
+        avg_risk_level = self.main_app.risk_calculator._determine_risk_level(avg_risk_score)
         
         # Add duplicate indicator if this is a duplicate analysis
         duplicate_indicator = "🔄 [DUPLICATE ANALYSIS]" if self.is_current_duplicate else ""
@@ -1001,24 +992,31 @@ Be educational and helpful, not just critical."""
 • Total PII: {session_totals['total_pii']}
 • Total Medical: {session_totals['total_medical']}
 • Total API/Security: {session_totals['total_compliance_api']}
-• Average Risk Score: {avg_risk_score}/100 ({avg_risk_level} RISK)
+• Average Risk Score: {avg_risk_score:.1f}/100 ({avg_risk_level} RISK)
 • Total Analyses: {self.session_metrics['analysis_count']}
 • Unique Code Analyses: {len(self.unique_code_hashes)}
 • Duplicate Analyses: {self.duplicate_analysis_count}
 
 """
         
-        # Banner strictly follows calculated risk_level, not session averages
-        if risk_level == "CRITICAL":
-            summary += "🚨 CRITICAL RISK detected. Immediate action required."
-        elif risk_level == "HIGH":
+        # Risk banner based on current analysis risk level
+        if risk_level == 'CRITICAL':
+            summary += "🚨 CRITICAL RISK detected! IMMEDIATE ACTION REQUIRED."
+        elif risk_level == 'HIGH':
             summary += "🚨 HIGH RISK detected! Please review and address security issues."
-        elif risk_level == "MEDIUM":
+        elif risk_level == 'MEDIUM':
             summary += "⚠️ MEDIUM RISK detected. Consider security improvements."
-        elif risk_level == "LOW":
+        elif risk_level == 'LOW':
             summary += "🟢 LOW RISK detected. Good security practices observed."
-        else:
+        else: # minimal
             summary += "✅ MINIMAL RISK. Excellent security practices!"
+            
+        summary += "\n"
+        
+        # AI security suggestions
+        suggestions = self._generate_secure_coding_suggestions(analysis_data)
+        if suggestions:
+            summary += suggestions
         
         return summary
     
