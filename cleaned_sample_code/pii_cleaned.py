@@ -6,41 +6,27 @@ def process_user_data():def process_user_data():
 
     ssn_2 = ""    ssn_2 = ""  # Cleared sensitive data
 
-
-
     credit_card_1 = ""    credit_card_1 = ""  # Cleared sensitive data
 
     credit_card_2 = ""    credit_card_2 = ""  # Cleared sensitive data
-
-
 
     email_1 = ""    email_1 = ""  # Cleared sensitive data
 
     email_2 = ""    email_2 = ""  # Cleared sensitive data
 
-
-
     phone_1 = ""    phone_1 = ""  # Cleared sensitive data
 
     phone_2 = ""    phone_2 = ""  # Cleared sensitive data
-
-
 
     address_1 = ""    address_1 = ""  # Cleared sensitive data
 
     address_2 = ""    address_2 = ""  # Cleared sensitive data
 
-
-
     dob_1 = ""    dob_1 = ""  # Cleared sensitive data
 
     dob_2 = ""    dob_2 = ""  # Cleared sensitive data
 
-
-
     return {}    return {}
-
-
 
 def create_user_profile():def create_user_profile():
 
@@ -72,11 +58,7 @@ def create_user_profile():def create_user_profile():
 
     }    }
 
-
-
     return user_data    return user_data
-
-
 
 def process_financial_data():def process_financial_data():
 
@@ -88,8 +70,6 @@ def process_financial_data():def process_financial_data():
 
     }    }
 
-
-
     tax_info = {    tax_info = {
 
         "tax_id": "",        "tax_id": "",  # Cleared sensitive data
@@ -100,11 +80,7 @@ def process_financial_data():def process_financial_data():
 
     }    }
 
-
-
     return {"bank": bank_account, "tax": tax_info}    return {"bank": bank_account, "tax": tax_info}
-
-
 
 user_config = {user_config = {
 
@@ -158,8 +134,6 @@ user_config = {user_config = {
 
 }}
 
-
-
 customer_data = [customer_data = [
 
     {"name": "", "ssn": "", "email": ""},    {"name": "", "ssn": "", "email": ""},  # Cleared sensitive data
@@ -169,8 +143,6 @@ customer_data = [customer_data = [
     {"name": "", "ssn": "", "email": ""}    {"name": "", "ssn": "", "email": ""}  # Cleared sensitive data
 
 ]]
-
-
 
 financial_records = {financial_records = {
 

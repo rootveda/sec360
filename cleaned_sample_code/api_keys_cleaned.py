@@ -4,39 +4,21 @@ def authenticate_user():def authenticate_user():
 
     api_key = ""    api_key = ""  # Cleared sensitive data
 
-
-
-
-
     secret_key = ""    secret_key = ""  # Cleared sensitive data
-
-
 
     bearer_token = ""    bearer_token = ""  # Cleared sensitive data
 
-
-
     db_connection = ""    db_connection = ""  # Cleared sensitive data
 
-
-
     return {"status": "authenticated"}    return {"status": "authenticated"}
-
-
 
 def make_api_call():def make_api_call():
 
     oauth_token = ""    oauth_token = ""  # Cleared sensitive data
 
-
-
     jwt_token = ""    jwt_token = ""  # Cleared sensitive data
 
-
-
     endpoint = ""    endpoint = ""  # Cleared sensitive data
-
-
 
     headers = {    headers = {
 
@@ -46,11 +28,7 @@ def make_api_call():def make_api_call():
 
     }    }
 
-
-
     return headers    return headers
-
-
 
 config = {config = {
 

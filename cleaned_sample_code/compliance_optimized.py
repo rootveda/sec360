@@ -24,11 +24,7 @@ def handle_standard_data():def handle_standard_data():
 
     }    }
 
-
-
     return data_config    return data_config
-
-
 
 def handle_user_data():def handle_user_data():
 
@@ -54,11 +50,7 @@ def handle_user_data():def handle_user_data():
 
     }    }
 
-
-
     return user_data    return user_data
-
-
 
 def handle_payment_data():def handle_payment_data():
 
@@ -82,11 +74,7 @@ def handle_payment_data():def handle_payment_data():
 
     }    }
 
-
-
     return payment_data    return payment_data
-
-
 
 def validate_compliance():def validate_compliance():
 
@@ -118,11 +106,7 @@ def validate_compliance():def validate_compliance():
 
     }    }
 
-
-
     return compliance_rules    return compliance_rules
-
-
 
 app_config = {app_config = {
 

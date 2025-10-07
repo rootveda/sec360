@@ -6,41 +6,27 @@ def process_user_data():def process_user_data():
 
     ssn_2 = "987654321"    ssn_2 = "987654321"
 
-
-
     credit_card_1 = "4532-1234-5678-9012"    credit_card_1 = "4532-1234-5678-9012"
 
     credit_card_2 = "5555555555554444"    credit_card_2 = "5555555555554444"
-
-
 
     email_1 = "john.doe@example.com"    email_1 = "john.doe@example.com"
 
     email_2 = "jane.smith@company.com"    email_2 = "jane.smith@company.com"
 
-
-
     phone_1 = "+1-555-123-4567"    phone_1 = "+1-555-123-4567"
 
     phone_2 = "(555) 987-6543"    phone_2 = "(555) 987-6543"
-
-
 
     address_1 = "123 Main Street, Anytown, NY 12345"    address_1 = "123 Main Street, Anytown, NY 12345"
 
     address_2 = "456 Oak Avenue, Somewhere, CA 90210"    address_2 = "456 Oak Avenue, Somewhere, CA 90210"
 
-
-
     dob_1 = "01/15/1985"    dob_1 = "01/15/1985"
 
     dob_2 = "12-25-1990"    dob_2 = "12-25-1990"
 
-
-
     return {}    return {}
-
-
 
 def create_user_profile():def create_user_profile():
 
@@ -72,11 +58,7 @@ def create_user_profile():def create_user_profile():
 
     }    }
 
-
-
     return user_data    return user_data
-
-
 
 def process_financial_data():def process_financial_data():
 
@@ -88,8 +70,6 @@ def process_financial_data():def process_financial_data():
 
     }    }
 
-
-
     tax_info = {    tax_info = {
 
         "tax_id": "12-3456789",        "tax_id": "12-3456789",
@@ -100,11 +80,7 @@ def process_financial_data():def process_financial_data():
 
     }    }
 
-
-
     return {"bank": bank_account, "tax": tax_info}    return {"bank": bank_account, "tax": tax_info}
-
-
 
 user_config = {user_config = {
 
@@ -158,8 +134,6 @@ user_config = {user_config = {
 
 }}
 
-
-
 customer_data = [customer_data = [
 
     {"name": "Alice Johnson", "ssn": "444-55-6666", "email": "alice@email.com"},    {"name": "Alice Johnson", "ssn": "444-55-6666", "email": "alice@email.com"},
@@ -169,8 +143,6 @@ customer_data = [customer_data = [
     {"name": "Carol Davis", "ssn": "000-11-2222", "email": "carol@email.com"}    {"name": "Carol Davis", "ssn": "000-11-2222", "email": "carol@email.com"}
 
 ]]
-
-
 
 financial_records = {financial_records = {
 

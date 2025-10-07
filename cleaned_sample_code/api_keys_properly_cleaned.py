@@ -12,17 +12,11 @@ def authenticate_user():def authenticate_user():
 
     auth_token = ""    auth_token = ""  # Cleared sensitive data
 
-
-
     return {"status": "authenticated"}    return {"status": "authenticated"}
-
-
 
 def make_api_call():def make_api_call():
 
     token = ""    token = ""  # Cleared sensitive data
-
-
 
     headers = {    headers = {
 
@@ -32,11 +26,7 @@ def make_api_call():def make_api_call():
 
     }    }
 
-
-
     return headers    return headers
-
-
 
 config = {config = {
 

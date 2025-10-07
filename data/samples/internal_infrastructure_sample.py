@@ -18,11 +18,7 @@ def get_database_config():def get_database_config():
 
     }    }
 
-
-
     return db_config    return db_config
-
-
 
 def get_api_endpoints():def get_api_endpoints():
 
@@ -38,11 +34,7 @@ def get_api_endpoints():def get_api_endpoints():
 
     }    }
 
-
-
     return endpoints    return endpoints
-
-
 
 def get_internal_services():def get_internal_services():
 
@@ -90,11 +82,7 @@ def get_internal_services():def get_internal_services():
 
     }    }
 
-
-
     return services    return services
-
-
 
 def get_vpn_config():def get_vpn_config():
 
@@ -116,11 +104,7 @@ def get_vpn_config():def get_vpn_config():
 
     }    }
 
-
-
     return vpn_config    return vpn_config
-
-
 
 def get_session_config():def get_session_config():
 
@@ -138,11 +122,7 @@ def get_session_config():def get_session_config():
 
     }    }
 
-
-
     return session_config    return session_config
-
-
 
 def get_monitoring_config():def get_monitoring_config():
 
@@ -182,11 +162,7 @@ def get_monitoring_config():def get_monitoring_config():
 
     }    }
 
-
-
     return monitoring    return monitoring
-
-
 
 def get_ldap_config():def get_ldap_config():
 
@@ -206,11 +182,7 @@ def get_ldap_config():def get_ldap_config():
 
     }    }
 
-
-
     return ldap_config    return ldap_config
-
-
 
 network_config = {network_config = {
 
@@ -247,8 +219,6 @@ network_config = {network_config = {
     ]    ]
 
 }}
-
-
 
 deployment_config = {deployment_config = {
 

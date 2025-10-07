@@ -18,11 +18,7 @@ def get_database_config():def get_database_config():
 
     }    }
 
-
-
     return db_config    return db_config
-
-
 
 def get_api_endpoints():def get_api_endpoints():
 
@@ -38,11 +34,7 @@ def get_api_endpoints():def get_api_endpoints():
 
     }    }
 
-
-
     return endpoints    return endpoints
-
-
 
 def get_internal_services():def get_internal_services():
 
@@ -82,11 +74,7 @@ def get_internal_services():def get_internal_services():
 
     }    }
 
-
-
     return services    return services
-
-
 
 def initialize_application():def initialize_application():
 
@@ -118,11 +106,7 @@ def initialize_application():def initialize_application():
 
     }    }
 
-
-
     return app_config    return app_config
-
-
 
 def setup_monitoring():def setup_monitoring():
 
@@ -162,11 +146,7 @@ def setup_monitoring():def setup_monitoring():
 
     }    }
 
-
-
     return monitoring_config    return monitoring_config
-
-
 
 global_config = {global_config = {
 

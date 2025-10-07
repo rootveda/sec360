@@ -24,11 +24,7 @@ def handle_hipaa_data():def handle_hipaa_data():
 
     }    }
 
-
-
     return phi_data    return phi_data
-
-
 
 def handle_gdpr_data():def handle_gdpr_data():
 
@@ -54,11 +50,7 @@ def handle_gdpr_data():def handle_gdpr_data():
 
     }    }
 
-
-
     return gdpr_data    return gdpr_data
-
-
 
 def handle_pci_data():def handle_pci_data():
 
@@ -82,11 +74,7 @@ def handle_pci_data():def handle_pci_data():
 
     }    }
 
-
-
     return pci_data    return pci_data
-
-
 
 def handle_sox_data():def handle_sox_data():
 
@@ -114,11 +102,7 @@ def handle_sox_data():def handle_sox_data():
 
     }    }
 
-
-
     return sox_data    return sox_data
-
-
 
 def handle_ferpa_data():def handle_ferpa_data():
 
@@ -154,11 +138,7 @@ def handle_ferpa_data():def handle_ferpa_data():
 
     }    }
 
-
-
     return ferpa_data    return ferpa_data
-
-
 
 def handle_ccpa_data():def handle_ccpa_data():
 
@@ -186,11 +166,7 @@ def handle_ccpa_data():def handle_ccpa_data():
 
     }    }
 
-
-
     return ccpa_data    return ccpa_data
-
-
 
 def handle_review_data():def handle_review_data():
 
@@ -230,11 +206,7 @@ def handle_review_data():def handle_review_data():
 
     }    }
 
-
-
     return review_data    return review_data
-
-
 
 def handle_regulatory_data():def handle_regulatory_data():
 
@@ -264,11 +236,7 @@ def handle_regulatory_data():def handle_regulatory_data():
 
     }    }
 
-
-
     return regulatory_data    return regulatory_data
-
-
 
 compliance_config = {compliance_config = {
 

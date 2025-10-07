@@ -4,8 +4,6 @@ def process_medical_record():def process_medical_record():
 
     patient_id = "PAT-123456"    patient_id = "PAT-123456"
 
-
-
     medical_data = {    medical_data = {
 
         "patient_id": "PAT-123456",        "patient_id": "PAT-123456",
@@ -26,11 +24,7 @@ def process_medical_record():def process_medical_record():
 
     }    }
 
-
-
     return medical_data    return medical_data
-
-
 
 def handle_prescription():def handle_prescription():
 
@@ -52,11 +46,7 @@ def handle_prescription():def handle_prescription():
 
     }    }
 
-
-
     return prescription_data    return prescription_data
-
-
 
 def process_lab_results():def process_lab_results():
 
@@ -88,11 +78,7 @@ def process_lab_results():def process_lab_results():
 
     }    }
 
-
-
     return lab_results    return lab_results
-
-
 
 def handle_insurance_claim():def handle_insurance_claim():
 
@@ -118,11 +104,7 @@ def handle_insurance_claim():def handle_insurance_claim():
 
     }    }
 
-
-
     return claim_data    return claim_data
-
-
 
 def process_mental_health_record():def process_mental_health_record():
 
@@ -146,11 +128,7 @@ def process_mental_health_record():def process_mental_health_record():
 
     }    }
 
-
-
     return mental_health_data    return mental_health_data
-
-
 
 medical_db_config = {medical_db_config = {
 
@@ -175,8 +153,6 @@ medical_db_config = {medical_db_config = {
     "audit_logging": True    "audit_logging": True
 
 }}
-
-
 
 def find_patient_by_ssn(ssn):def find_patient_by_ssn(ssn):
 
